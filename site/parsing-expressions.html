@@ -102,17 +102,14 @@ substring operations to extract some sense out of a pile of text. The code was
 probably riddled with bugs and a beast to maintain. Writing a <em>real</em> parser<span class="em">&mdash;</span>one with decent error handling, a coherent internal structure, and the ability
 to robustly chew through a sophisticated syntax<span class="em">&mdash;</span>is considered a rare,
 impressive skill. In this chapter, you will <span name="attain">attain</span>
-it.</p>
-<aside name="parse">
+it.</p><aside name="parse">
 <p>&ldquo;Parse&rdquo; comes to English from the Old French &ldquo;pars&rdquo; for &ldquo;part of speech&rdquo;. It
 means to take a text and map each word to the grammar of the language. We use it
 here in the same sense, except that our language is a little more modern than
-Old French.</p>
-</aside>
+Old French.</p></aside>
 <aside name="attain">
 <p>Like many rites of passage, you&rsquo;ll probably find it looks a little smaller, a
-little less daunting when it&rsquo;s behind you than when it loomed ahead.</p>
-</aside>
+little less daunting when it&rsquo;s behind you than when it loomed ahead.</p></aside>
 <p>It&rsquo;s easier than you think, partially because we front-loaded a lot of the hard
 work in the <a href="representing-code.html">last chapter</a>. You already know your way around a formal grammar.
 You&rsquo;re familiar with syntax trees, and we have some Java classes to represent
@@ -121,11 +118,9 @@ tokens into one of those syntax trees.</p>
 <p>Some CS textbooks make a big deal out of parsers. In the &rsquo;60s, computer
 scientists<span class="em">&mdash;</span>understandably tired of programming in assembly language<span class="em">&mdash;</span>started designing more sophisticated, <span name="human">human</span>-friendly
 languages like Fortran and ALGOL. Alas, they weren&rsquo;t very <em>machine</em>-friendly
-for the primitive computers of the time.</p>
-<aside name="human">
+for the primitive computers of the time.</p><aside name="human">
 <p>Imagine how harrowing assembly programming on those old machines must have been
-that they considered <em>Fortran</em> to be an improvement.</p>
-</aside>
+that they considered <em>Fortran</em> to be an improvement.</p></aside>
 <p>These pioneers designed languages that they honestly weren&rsquo;t even sure how to
 write compilers for, and then did groundbreaking work inventing parsing and
 compiling techniques that could handle these new, big languages on those old, tiny
@@ -138,8 +133,7 @@ translation&rdquo;. They laid it on thick.</p>
 <p>A little self-congratulation is well-deserved, but the truth is you don&rsquo;t need
 to know most of that stuff to bang out a high quality parser for a modern
 machine. As always, I encourage you to broaden your education and take it in
-later, but this book omits the trophy case.</p>
-<h2><a href="#ambiguity-and-the-parsing-game" id="ambiguity-and-the-parsing-game"><small>6&#8202;.&#8202;1</small>Ambiguity and the Parsing Game</a></h2>
+later, but this book omits the trophy case.</p><hnull><a href="#null" id=""></a></hnull>
 <p>In the last chapter, I said you can &ldquo;play&rdquo; a context-free grammar like a game in
 order to <em>generate</em> strings. Parsers play that game in reverse. Given a string<span class="em">&mdash;</span>a series of tokens<span class="em">&mdash;</span>we map those tokens to terminals in the grammar to
 figure out which rules could have generated that string.</p>
@@ -169,7 +163,7 @@ together in the last chapter:</p>
 <ol>
 <li>Starting at <code>expression</code>, pick <code>binary</code>.</li>
 <li>For the left-hand <code>expression</code>, pick <code>NUMBER</code>, and use <code>6</code>.</li>
-<li>For the operator, pick <code>"/"</code>.</li>
+<li>For the operator, pick <code>&quot;/&quot;</code>.</li>
 <li>For the right-hand <code>expression</code>, pick <code>binary</code> again.</li>
 <li>In that nested <code>binary</code> expression, pick <code>3 - 1</code>.</li>
 </ol>
@@ -178,7 +172,7 @@ together in the last chapter:</p>
 <li>Starting at <code>expression</code>, pick <code>binary</code>.</li>
 <li>For the left-hand <code>expression</code>, pick <code>binary</code> again.</li>
 <li>In that nested <code>binary</code> expression, pick <code>6 / 3</code>.</li>
-<li>Back at the outer <code>binary</code>, for the operator, pick <code>"-"</code>.</li>
+<li>Back at the outer <code>binary</code>, for the operator, pick <code>&quot;-&quot;</code>.</li>
 <li>For the right-hand <code>expression</code>, pick <code>NUMBER</code>, and use <code>1</code>.</li>
 </ol>
 <p>Those produce the same <em>strings</em>, but not the same <em>syntax trees</em>:</p><img src="image/parsing-expressions/syntax-trees.png" alt="Two valid syntax trees: (6 / 3) - 1 and 6 / (3 - 1)" />
@@ -219,8 +213,7 @@ operators have <em>no</em> relative precedence. That makes it a syntax error to 
 those operators in an expression without using explicit grouping.</p>
 <p>Likewise, some operators are <strong>non-associative</strong>. That means it&rsquo;s an error to
 use that operator more than once in a sequence. For example, Perl&rsquo;s range
-operator isn&rsquo;t associative, so <code>a .. b</code> is OK, but <code>a .. b .. c</code> is an error.</p>
-</aside>
+operator isn&rsquo;t associative, so <code>a .. b</code> is OK, but <code>a .. b .. c</code> is an error.</p></aside>
 <p>Without well-defined precedence and associativity, an expression that uses
 multiple operators is ambiguous<span class="em">&mdash;</span>it can be parsed into different syntax trees,
 which could in turn evaluate to different results. We&rsquo;ll fix that in Lox by
@@ -279,8 +272,7 @@ separate rule for each precedence level.</p>
 <p>Instead of baking precedence right into the grammar rules, some parser
 generators let you keep the same ambiguous-but-simple grammar and then add in a
 little explicit operator precedence metadata on the side in order to
-disambiguate.</p>
-</aside>
+disambiguate.</p></aside>
 <p>Each rule here only matches expressions at its precedence level or higher. For
 example, <code>unary</code> matches a unary expression like <code>!negated</code> or a primary
 expression like <code>1234</code>. And <code>term</code> can match <code>1 + 2</code> but also <code>3 * 4 / 5</code>. The
@@ -289,15 +281,13 @@ parenthesized expressions.</p>
 <p>We just need to fill in the productions for each of those rules. We&rsquo;ll do the
 easy ones first. The top <code>expression</code> rule matches any expression at any
 precedence level. Since <span name="equality"><code>equality</code></span> has the lowest
-precedence, if we match that, then it covers everything.</p>
-<aside name="equality">
+precedence, if we match that, then it covers everything.</p><aside name="equality">
 <p>We could eliminate <code>expression</code> and simply use <code>equality</code> in the other rules
 that contain expressions, but using <code>expression</code> makes those other rules read a
 little better.</p>
 <p>Also, in later chapters when we expand the grammar to include assignment and
 logical operators, we&rsquo;ll only need to change the production for <code>expression</code>
-instead of touching every rule that contains an expression.</p>
-</aside>
+instead of touching every rule that contains an expression.</p></aside>
 <div class="codehilite"><pre><span class="i">expression</span>     → <span class="i">equality</span>
 </pre></div>
 <p>Over at the other end of the precedence table, a primary expression contains
@@ -325,8 +315,7 @@ multiplication and division. Here&rsquo;s a first try:</p>
 <p>The rule recurses to match the left operand. That enables the rule to match a
 series of multiplication and division expressions like <code>1 * 2 / 3</code>. Putting the
 recursive production on the left side and <code>unary</code> on the right makes the rule
-<span name="mult">left-associative</span> and unambiguous.</p>
-<aside name="mult">
+<span name="mult">left-associative</span> and unambiguous.</p><aside name="mult">
 <p>In principle, it doesn&rsquo;t matter whether you treat multiplication as left- or
 right-associative<span class="em">&mdash;</span>you get the same result either way. Alas, in the real world
 with limited precision, roundoff and overflow mean that associativity can affect
@@ -337,8 +326,7 @@ the result of a sequence of multiplications. Consider:</p>
 <p>In languages like Lox that use <a href="https://en.wikipedia.org/wiki/Double-precision_floating-point_format">IEEE 754</a> double-precision floating-point
 numbers, the first evaluates to <code>0.006</code>, while the second yields
 <code>0.006000000000000001</code>. Sometimes that tiny difference matters.
-<a href="https://docs.oracle.com/cd/E19957-01/806-3568/ncg_goldberg.html">This</a> is a good place to learn more.</p>
-</aside>
+<a href="https://docs.oracle.com/cd/E19957-01/806-3568/ncg_goldberg.html">This</a> is a good place to learn more.</p></aside>
 <p>All of this is correct, but the fact that the first symbol in the body of the
 rule is the same as the head of the rule means this production is
 <strong>left-recursive</strong>. Some parsing techniques, including the one we&rsquo;re going to
@@ -367,8 +355,7 @@ grammar:</p>
 </pre></div>
 <p>This grammar is more complex than the one we had before, but in return we have
 eliminated the previous one&rsquo;s ambiguity. It&rsquo;s just what we need to make a
-parser.</p>
-<h2><a href="#recursive-descent-parsing" id="recursive-descent-parsing"><small>6&#8202;.&#8202;2</small>Recursive Descent Parsing</a></h2>
+parser.</p><hnull><a href="#null" id=""></a></hnull>
 <p>There is a whole pack of parsing techniques whose names are mostly combinations
 of &ldquo;L&rdquo; and &ldquo;R&rdquo;<span class="em">&mdash;</span><a href="https://en.wikipedia.org/wiki/LL_parser">LL(k)</a>, <a href="https://en.wikipedia.org/wiki/LR_parser">LR(1)</a>, <a href="https://en.wikipedia.org/wiki/LALR_parser">LALR</a><span class="em">&mdash;</span>along with more exotic
 beasts like <a href="https://en.wikipedia.org/wiki/Parser_combinator">parser combinators</a>, <a href="https://en.wikipedia.org/wiki/Earley_parser">Earley parsers</a>, <a href="https://en.wikipedia.org/wiki/Shunting-yard_algorithm">the shunting yard
@@ -386,8 +373,7 @@ top or outermost grammar rule (here <code>expression</code>) and works its way <
 name="descent">down</span> into the nested subexpressions before finally
 reaching the leaves of the syntax tree. This is in contrast with bottom-up
 parsers like LR that start with primary expressions and compose them into larger
-and larger chunks of syntax.</p>
-<aside name="descent">
+and larger chunks of syntax.</p><aside name="descent">
 <p>It&rsquo;s called &ldquo;recursive <em>descent</em>&rdquo; because it walks <em>down</em> the grammar.
 Confusingly, we also use direction metaphorically when talking about &ldquo;high&rdquo; and
 &ldquo;low&rdquo; precedence, but the orientation is reversed. In a top-down parser, you
@@ -395,8 +381,7 @@ reach the lowest-precedence expressions first because they may in turn contain
 subexpressions of higher precedence.</p><img src="image/parsing-expressions/direction.png" alt="Top-down grammar rules in order of increasing precedence." />
 <p>CS people really need to get together and straighten out their metaphors. Don&rsquo;t
 even get me started on which direction a stack grows or why trees have their
-roots on top.</p>
-</aside>
+roots on top.</p></aside>
 <p>A recursive descent parser is a literal translation of the grammar&rsquo;s rules
 straight into imperative code. Each rule becomes a function. The body of the
 rule translates to code roughly like:</p><table>
@@ -416,11 +401,9 @@ rule translates to code roughly like:</p><table>
 </table>
 <p>The descent is described as &ldquo;recursive&rdquo; because when a grammar rule refers to
 itself<span class="em">&mdash;</span>directly or indirectly<span class="em">&mdash;</span>that translates to a recursive function
-call.</p>
-<h3><a href="#the-parser-class" id="the-parser-class"><small>6&#8202;.&#8202;2&#8202;.&#8202;1</small>The parser class</a></h3>
+call.</p><hnull><a href="#null" id=""></a></hnull>
 <p>Each grammar rule becomes a method inside this new class:</p>
-<div class="codehilite"><div class="source-file"><em>lox/Parser.java</em><br>
-create new file</div>
+<div class="codehilite"><div class="source-file"><em>lox/Parser.java</em></div>
 <pre><span class="k">package</span> <span class="i">com.craftinginterpreters.lox</span>;
 
 <span class="k">import</span> <span class="i">java.util.List</span>;
@@ -436,7 +419,7 @@ create new file</div>
   }
 }
 </pre></div>
-<div class="source-file-narrow"><em>lox/Parser.java</em>, create new file</div>
+<div class="source-file-narrow"><em>lox/Parser.java</em></div>
 
 <p>Like the scanner, the parser consumes a flat input sequence, only now we&rsquo;re
 reading tokens instead of characters. We store the list of tokens and use
@@ -455,12 +438,10 @@ add after <em>Parser</em>()</div>
 <p>Each method for parsing a grammar rule produces a syntax tree for that rule and
 returns it to the caller. When the body of the rule contains a nonterminal<span class="em">&mdash;</span>a
 reference to another rule<span class="em">&mdash;</span>we <span name="left">call</span> that other rule&rsquo;s
-method.</p>
-<aside name="left">
+method.</p><aside name="left">
 <p>This is why left recursion is problematic for recursive descent. The function
 for a left-recursive rule immediately calls itself, which calls itself again,
-and so on, until the parser hits a stack overflow and dies.</p>
-</aside>
+and so on, until the parser hits a stack overflow and dies.</p></aside>
 <p>The rule for equality is a little more complex.</p>
 <div class="codehilite"><pre><span class="i">equality</span>       → <span class="i">comparison</span> ( ( <span class="s">&quot;!=&quot;</span> | <span class="s">&quot;==&quot;</span> ) <span class="i">comparison</span> )* ;
 </pre></div>
@@ -564,8 +545,7 @@ binary operator nodes.</p>
 <p><span name="sequence"></span></p><img src="image/parsing-expressions/sequence.png" alt="The syntax tree created by parsing 'a == b == c == d == e'" />
 <aside name="sequence">
 <p>Parsing <code>a == b == c == d == e</code>. For each iteration, we create a new binary
-expression using the previous one as the left operand.</p>
-</aside>
+expression using the previous one as the left operand.</p></aside>
 <p>The parser falls out of the loop once it hits a token that&rsquo;s not an equality
 operator. Finally, it returns the expression. Note that if the parser never
 encounters an equality operator, then it never enters the loop. In that case,
@@ -597,12 +577,10 @@ and so is the corresponding code. The only differences are the token types for
 the operators we match, and the method we call for the operands<span class="em">&mdash;</span>now
 <code>term()</code> instead of <code>comparison()</code>. The remaining two binary operator rules
 follow the same pattern.</p>
-<p>In order of precedence, first addition and subtraction:</p>
-<aside name="handle">
+<p>In order of precedence, first addition and subtraction:</p><aside name="handle">
 <p>If you wanted to do some clever Java 8, you could create a helper method for
 parsing a left-associative series of binary operators given a list of token
-types, and an operand method handle to simplify this redundant code.</p>
-</aside>
+types, and an operand method handle to simplify this redundant code.</p></aside>
 <div class="codehilite"><div class="source-file"><em>lox/Parser.java</em><br>
 add after <em>comparison</em>()</div>
 <pre>  <span class="k">private</span> <span class="t">Expr</span> <span class="i">term</span>() {
@@ -660,11 +638,9 @@ add after <em>factor</em>()</div>
 <p>Again, we look at the <span name="current">current</span> token to see how to
 parse. If it&rsquo;s a <code>!</code> or <code>-</code>, we must have a unary expression. In that case, we
 grab the token and then recursively call <code>unary()</code> again to parse the operand.
-Wrap that all up in a unary expression syntax tree and we&rsquo;re done.</p>
-<aside name="current">
+Wrap that all up in a unary expression syntax tree and we&rsquo;re done.</p><aside name="current">
 <p>The fact that the parser looks ahead at upcoming tokens to decide how to parse
-puts recursive descent into the category of <strong>predictive parsers</strong>.</p>
-</aside>
+puts recursive descent into the category of <strong>predictive parsers</strong>.</p></aside>
 <p>Otherwise, we must have reached the highest level of precedence, primary
 expressions.</p>
 <div class="codehilite"><pre><span class="i">primary</span>        → <span class="t">NUMBER</span> | <span class="t">STRING</span> | <span class="s">&quot;true&quot;</span> | <span class="s">&quot;false&quot;</span> | <span class="s">&quot;nil&quot;</span>
@@ -694,8 +670,7 @@ add after <em>unary</em>()</div>
 
 <p>The interesting branch is the one for handling parentheses. After we match an
 opening <code>(</code> and parse the expression inside it, we <em>must</em> find a <code>)</code> token. If
-we don&rsquo;t, that&rsquo;s an error.</p>
-<h2><a href="#syntax-errors" id="syntax-errors"><small>6&#8202;.&#8202;3</small>Syntax Errors</a></h2>
+we don&rsquo;t, that&rsquo;s an error.</p><hnull><a href="#null" id=""></a></hnull>
 <p>A parser really has two jobs:</p>
 <ol>
 <li>
@@ -715,22 +690,20 @@ help guide them back onto the right path. The way it reports errors is a large
 part of your language&rsquo;s user interface. Good syntax error handling is hard. By
 definition, the code isn&rsquo;t in a well-defined state, so there&rsquo;s no infallible way
 to know what the user <em>meant</em> to write. The parser can&rsquo;t read your <span
-name="telepathy">mind</span>.</p>
-<aside name="telepathy">
+name="telepathy">mind</span>.</p><aside name="telepathy">
 <p>Not yet at least. With the way things are going in machine learning these days,
-who knows what the future will bring?</p>
-</aside>
+who knows what the future will bring?</p></aside>
 <p>There are a couple of hard requirements for when the parser runs into a syntax
 error. A parser must:</p>
 <ul>
 <li>
 <p><strong>Detect and report the error.</strong> If it doesn&rsquo;t detect the <span
 name="error">error</span> and passes the resulting malformed syntax tree on
-to the interpreter, all manner of horrors may be summoned.</p>
-<aside name="error">
+to the interpreter, all manner of horrors may be summoned.</p><aside name="error">
+
 <p>Philosophically speaking, if an error isn&rsquo;t detected and the interpreter
-runs the code, is it <em>really</em> an error?</p>
-</aside></li>
+runs the code, is it <em>really</em> an error?</p></aside>
+</li>
 <li>
 <p><strong>Avoid crashing or hanging.</strong> Syntax errors are a fact of life, and
 language tools have to be robust in the face of them. Segfaulting or getting
@@ -775,8 +748,7 @@ then, you&rsquo;d hand a stack of punch cards to the secretary and come back the
 day to see if the compiler succeeded. With an iteration loop that slow, you
 <em>really</em> wanted to find every single error in your code in one pass.</p>
 <p>Today, when parsers complete before you&rsquo;ve even finished typing, it&rsquo;s less of an
-issue. Simple, fast error recovery is fine.</p>
-<h3><a href="#panic-mode-error-recovery" id="panic-mode-error-recovery"><small>6&#8202;.&#8202;3&#8202;.&#8202;1</small>Panic mode error recovery</a></h3>
+issue. Simple, fast error recovery is fine.</p><hnull><a href="#null" id=""></a></hnull>
 <aside name="panic">
 <p>You know you want to push it.</p><img src="image/parsing-expressions/panic.png" alt="A big shiny 'PANIC' button." />
 </aside>
@@ -799,8 +771,7 @@ effects of the initial error aren&rsquo;t <em>falsely</em> reported either, whic
 trade-off.</p>
 <p>The traditional place in the grammar to synchronize is between statements. We
 don&rsquo;t have those yet, so we won&rsquo;t actually synchronize in this chapter, but
-we&rsquo;ll get the machinery in place for later.</p>
-<h3><a href="#entering-panic-mode" id="entering-panic-mode"><small>6&#8202;.&#8202;3&#8202;.&#8202;2</small>Entering panic mode</a></h3>
+we&rsquo;ll get the machinery in place for later.</p><hnull><a href="#null" id=""></a></hnull>
 <p>Back before we went on this side trip around error recovery, we were writing the
 code to parse a parenthesized expression. After parsing the expression, the
 parser looks for the closing <code>)</code> by calling <code>consume()</code>. Here, finally, is that
@@ -864,8 +835,7 @@ places, we simply report the error and keep on truckin&rsquo;.</p>
 <p>For example, Lox limits the number of arguments you can pass to a function. If
 you pass too many, the parser needs to report that error, but it can and should
 simply keep on parsing the extra arguments instead of freaking out and going
-into panic mode.</p>
-<aside name="production">
+into panic mode.</p><aside name="production">
 <p>Another way to handle common syntax errors is with <strong>error productions</strong>. You
 augment the grammar with a rule that <em>successfully</em> matches the <em>erroneous</em>
 syntax. The parser safely parses it but then reports it as an error instead of
@@ -882,12 +852,10 @@ parser in a weird state.</p>
 is wrong and what the user was likely trying to do. That means you can give a
 more helpful message to get the user back on track, like, &ldquo;Unary &lsquo;+&rsquo; expressions
 are not supported.&rdquo; Mature parsers tend to accumulate error productions like
-barnacles since they help users fix common mistakes.</p>
-</aside>
+barnacles since they help users fix common mistakes.</p></aside>
 <p>In our case, though, the syntax error is nasty enough that we want to panic and
 synchronize. Discarding tokens is pretty easy, but how do we synchronize the
-parser&rsquo;s own state?</p>
-<h3><a href="#synchronizing-a-recursive-descent-parser" id="synchronizing-a-recursive-descent-parser"><small>6&#8202;.&#8202;3&#8202;.&#8202;3</small>Synchronizing a recursive descent parser</a></h3>
+parser&rsquo;s own state?</p><hnull><a href="#null" id=""></a></hnull>
 <p>With recursive descent, the parser&rsquo;s state<span class="em">&mdash;</span>which rules it is in the middle of
 recognizing<span class="em">&mdash;</span>is not stored explicitly in fields. Instead, we use Java&rsquo;s
 own call stack to track what the parser is doing. Each rule in the middle of
@@ -903,12 +871,10 @@ statement. That boundary is pretty easy to spot<span class="em">&mdash;</span>it
 we picked it. <em>After</em> a semicolon, we&rsquo;re <span name="semicolon">probably</span>
 finished with a statement. Most statements start with a keyword<span class="em">&mdash;</span><code>for</code>, <code>if</code>,
 <code>return</code>, <code>var</code>, etc. When the <em>next</em> token is any of those, we&rsquo;re probably
-about to start a statement.</p>
-<aside name="semicolon">
+about to start a statement.</p><aside name="semicolon">
 <p>I say &ldquo;probably&rdquo; because we could hit a semicolon separating clauses in a <code>for</code>
 loop. Our synchronization isn&rsquo;t perfect, but that&rsquo;s OK. We&rsquo;ve already reported
-the first error precisely, so everything after that is kind of &ldquo;best effort&rdquo;.</p>
-</aside>
+the first error precisely, so everything after that is kind of &ldquo;best effort&rdquo;.</p></aside>
 <p>This method encapsulates that logic:</p>
 <div class="codehilite"><div class="source-file"><em>lox/Parser.java</em><br>
 add after <em>error</em>()</div>
@@ -944,8 +910,7 @@ the next statement.</p>
 <p>Alas, we don&rsquo;t get to see this method in action, since we don&rsquo;t have statements
 yet. We&rsquo;ll get to that <a href="statements-and-state.html">in a couple of chapters</a>. For now, if an
 error occurs, we&rsquo;ll panic and unwind all the way to the top and stop parsing.
-Since we can parse only a single expression anyway, that&rsquo;s no big loss.</p>
-<h2><a href="#wiring-up-the-parser" id="wiring-up-the-parser"><small>6&#8202;.&#8202;4</small>Wiring up the Parser</a></h2>
+Since we can parse only a single expression anyway, that&rsquo;s no big loss.</p><hnull><a href="#null" id=""></a></hnull>
 <p>We are mostly done parsing expressions now. There is one other place where we
 need to add a little error handling. As the parser descends through the parsing
 methods for each grammar rule, it eventually hits <code>primary()</code>. If none of the
@@ -1010,20 +975,16 @@ replace 5 lines</div>
 <p>Congratulations, you have crossed the <span name="harder">threshold</span>! That
 really is all there is to handwriting a parser. We&rsquo;ll extend the grammar in
 later chapters with assignment, statements, and other stuff, but none of that is
-any more complex than the binary operators we tackled here.</p>
-<aside name="harder">
+any more complex than the binary operators we tackled here.</p><aside name="harder">
 <p>It is possible to define a more complex grammar than Lox&rsquo;s that&rsquo;s difficult to
 parse using recursive descent. Predictive parsing gets tricky when you may need
 to look ahead a large number of tokens to figure out what you&rsquo;re sitting on.</p>
 <p>In practice, most languages are designed to avoid that. Even in cases where they
 aren&rsquo;t, you can usually hack around it without too much pain. If you can parse
 C++ using recursive descent<span class="em">&mdash;</span>which many C++ compilers do<span class="em">&mdash;</span>you can parse
-anything.</p>
-</aside>
+anything.</p></aside>
 <p>Fire up the interpreter and type in some expressions. See how it handles
-precedence and associativity correctly? Not bad for less than 200 lines of code.</p>
-<div class="challenges">
-<h2><a href="#challenges" id="challenges">Challenges</a></h2>
+precedence and associativity correctly? Not bad for less than 200 lines of code.</p><div class="challenges"><hnull><a href="#null" id=""></a></hnull>
 <ol>
 <li>
 <p>In C, a block is a statement form that allows you to pack a series of
@@ -1050,8 +1011,7 @@ discard a right-hand operand with the appropriate precedence.</p>
 </li>
 </ol>
 </div>
-<div class="design-note">
-<h2><a href="#design-note" id="design-note">Design Note: Logic Versus History</a></h2>
+<div class="design-note"><hnull><a href="#null" id=""></a></hnull>
 <p>Let&rsquo;s say we decide to add bitwise <code>&amp;</code> and <code>|</code> operators to Lox. Where should we
 put them in the precedence hierarchy? C<span class="em">&mdash;</span>and most languages that follow in C&rsquo;s
 footsteps<span class="em">&mdash;</span>place them below <code>==</code>. This is widely considered a mistake because
@@ -1097,8 +1057,7 @@ history books and start our own story.</p>
 Getting them to come to your language requires a big leap. The smaller you can
 make that chasm, the more people will be willing to cross it. But you can&rsquo;t
 <em>always</em> stick to history, or your language won&rsquo;t have anything new and
-compelling to give people a <em>reason</em> to jump over.</p>
-</div>
+compelling to give people a <em>reason</em> to jump over.</p></div>
 
 <footer>
 <a href="evaluating-expressions.html" class="next">

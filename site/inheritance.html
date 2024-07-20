@@ -109,12 +109,9 @@ off Lox&rsquo;s class support by adding inheritance.</p>
 name="inherited">first</span> one, <a href="https://en.wikipedia.org/wiki/Simula">Simula</a>. Early on, Kristen Nygaard and
 Ole-Johan Dahl noticed commonalities across classes in the simulation programs
 they wrote. Inheritance gave them a way to reuse the code for those similar
-parts.</p>
-<aside name="inherited">
+parts.</p><aside name="inherited">
 <p>You could say all those other languages <em>inherited</em> it from Simula. Hey-ooo!
-I&rsquo;ll, uh, see myself out.</p>
-</aside>
-<h2><a href="#superclasses-and-subclasses" id="superclasses-and-subclasses"><small>13&#8202;.&#8202;1</small>Superclasses and Subclasses</a></h2>
+I&rsquo;ll, uh, see myself out.</p></aside><hnull><a href="#null" id=""></a></hnull>
 <p>Given that the concept is &ldquo;inheritance&rdquo;, you would hope they would pick a
 consistent metaphor and call them &ldquo;parent&rdquo; and &ldquo;child&rdquo; classes, but that would
 be too easy. Way back when, C. A. R. Hoare coined the term &ldquo;<span
@@ -123,8 +120,7 @@ type. Simula borrowed that term to refer to a <em>class</em> that inherits from
 another. I don&rsquo;t think it was until Smalltalk came along that someone flipped
 the Latin prefix to get &ldquo;superclass&rdquo; to refer to the other side of the
 relationship. From C++, you also hear &ldquo;base&rdquo; and &ldquo;derived&rdquo; classes. I&rsquo;ll mostly
-stick with &ldquo;superclass&rdquo; and &ldquo;subclass&rdquo;.</p>
-<aside name="subclass">
+stick with &ldquo;superclass&rdquo; and &ldquo;subclass&rdquo;.</p><aside name="subclass">
 <p>&ldquo;Super-&rdquo; and &ldquo;sub-&rdquo; mean &ldquo;above&rdquo; and &ldquo;below&rdquo; in Latin, respectively. Picture an
 inheritance tree like a family tree with the root at the top<span class="em">&mdash;</span>subclasses are
 below their superclasses on the diagram. More generally, &ldquo;sub-&rdquo; refers to things
@@ -320,19 +316,16 @@ in class <em>LoxClass</em></div>
 <div class="source-file-narrow"><em>lox/LoxClass.java</em>, in class <em>LoxClass</em></div>
 
 <p>With that, we can define classes that are subclasses of other classes. Now, what
-does having a superclass actually <em>do?</em></p>
-<h2><a href="#inheriting-methods" id="inheriting-methods"><small>13&#8202;.&#8202;2</small>Inheriting Methods</a></h2>
+does having a superclass actually <em>do?</em></p><hnull><a href="#null" id=""></a></hnull>
 <p>Inheriting from another class means that everything that&rsquo;s <span
 name="liskov">true</span> of the superclass should be true, more or less, of the
 subclass. In statically typed languages, that carries a lot of implications. The
 sub<em>class</em> must also be a sub<em>type</em>, and the memory layout is controlled so that
 you can pass an instance of a subclass to a function expecting a superclass and
-it can still access the inherited fields correctly.</p>
-<aside name="liskov">
+it can still access the inherited fields correctly.</p><aside name="liskov">
 <p>A fancier name for this hand-wavey guideline is the <a href="https://en.wikipedia.org/wiki/Liskov_substitution_principle"><em>Liskov substitution
 principle</em></a>. Barbara Liskov introduced it in a keynote during the
-formative period of object-oriented programming.</p>
-</aside>
+formative period of object-oriented programming.</p></aside>
 <p>Lox is a dynamically typed language, so our requirements are much simpler.
 Basically, it means that if you can call some method on an instance of the
 superclass, you should be able to call that method when given an instance of the
@@ -367,8 +360,7 @@ superclass chain and look there. Give it a try:</p>
 <span class="t">BostonCream</span>().<span class="i">cook</span>();
 </pre></div>
 <p>There we go, half of our inheritance features are complete with only three lines
-of Java code.</p>
-<h2><a href="#calling-superclass-methods" id="calling-superclass-methods"><small>13&#8202;.&#8202;3</small>Calling Superclass Methods</a></h2>
+of Java code.</p><hnull><a href="#null" id=""></a></hnull>
 <p>In <code>findMethod()</code> we look for a method on the current class <em>before</em> walking up
 the superclass chain. If a method with the same name exists in both the subclass
 and the superclass, the subclass one takes precedence or <strong>overrides</strong> the
@@ -403,8 +395,7 @@ Pipe full of custard and coat with chocolate.
 </pre></div>
 <p>We have a new expression form. The <code>super</code> keyword, followed by a dot and an
 identifier, looks for a method with that name. Unlike calls on <code>this</code>, the search
-starts at the superclass.</p>
-<h3><a href="#syntax" id="syntax"><small>13&#8202;.&#8202;3&#8202;.&#8202;1</small>Syntax</a></h3>
+starts at the superclass.</p><hnull><a href="#null" id=""></a></hnull>
 <p>With <code>this</code>, the keyword works sort of like a magic variable, and the expression
 is that one lone token. But with <code>super</code>, the subsequent <code>.</code> and property name
 are inseparable parts of the <code>super</code> expression. You can&rsquo;t have a bare <code>super</code>
@@ -436,8 +427,7 @@ in <em>main</em>()</div>
 <div class="source-file-narrow"><em>tool/GenerateAst.java</em>, in <em>main</em>()</div>
 
 <aside name="super-ast">
-<p>The generated code for the new node is in <a href="appendix-ii.html#super-expression">Appendix II</a>.</p>
-</aside>
+<p>The generated code for the new node is in <a href="appendix-ii.html#super-expression">Appendix II</a>.</p></aside>
 <p>Following the grammar, the new parsing code goes inside our existing <code>primary()</code>
 method.</p>
 <div class="codehilite"><pre class="insert-before">      return new Expr.Literal(previous().literal);
@@ -460,8 +450,7 @@ in <em>primary</em>()</div>
 <div class="source-file-narrow"><em>lox/Parser.java</em>, in <em>primary</em>()</div>
 
 <p>A leading <code>super</code> keyword tells us we&rsquo;ve hit a <code>super</code> expression. After that we
-consume the expected <code>.</code> and method name.</p>
-<h3><a href="#semantics" id="semantics"><small>13&#8202;.&#8202;3&#8202;.&#8202;2</small>Semantics</a></h3>
+consume the expected <code>.</code> and method name.</p><hnull><a href="#null" id=""></a></hnull>
 <p>Earlier, I said a <code>super</code> expression starts the method lookup from &ldquo;the
 superclass&rdquo;, but <em>which</em> superclass? The naïve answer is the superclass of
 <code>this</code>, the object the surrounding method was called on. That coincidentally
@@ -493,7 +482,7 @@ is what we want Lox to do too. When this program runs, inside the body of
 <em>not</em> where the lookup should start. If it did, we would hit B&rsquo;s <code>method()</code>.</p>
 <p>Instead, lookup should start on the superclass of <em>the class containing the
 <code>super</code> expression</em>. In this case, since <code>test()</code> is defined inside B, the
-<code>super</code> expression inside it should start the lookup on <em>B</em>&rsquo;s superclass<span class="em">&mdash;</span>A.</p>
+<code>super</code> expression inside it should start the lookup on <em>B</em>’s superclass<span class="em">&mdash;</span>A.</p>
 <p><span name="flow"></span></p><img src="image/inheritance/classes.png" alt="The call chain flowing through the classes." />
 <aside name="flow">
 <p>The execution flow looks something like this:</p>
@@ -525,10 +514,8 @@ we needed to add support for <code>this</code>. In that case, we used our existi
 environment and closure mechanism to store a reference to the current object.
 Could we do something similar for storing the superclass<span
 name="rhetorical">?</span> Well, I probably wouldn&rsquo;t be talking about it if the
-answer was no, so<span class="ellipse">&thinsp;.&thinsp;.&thinsp;.&nbsp;</span>yes.</p>
-<aside name="rhetorical">
-<p>Does anyone even like rhetorical questions?</p>
-</aside>
+answer was no, so<span class="ellipse">&thinsp;.&thinsp;.&thinsp;.&nbsp;</span>yes.</p><aside name="rhetorical">
+<p>Does anyone even like rhetorical questions?</p></aside>
 <p>One important difference is that we bound <code>this</code> when the method was <em>accessed</em>.
 The same method can be called on different instances and each needs its own
 <code>this</code>. With <code>super</code> expressions, the superclass is a fixed property of the
@@ -672,11 +659,9 @@ in <em>visitSuperExpr</em>()</div>
 
 <p>Offsetting the distance by one looks up &ldquo;this&rdquo; in that inner environment. I
 admit this isn&rsquo;t the most <span name="elegant">elegant</span> code, but it
-works.</p>
-<aside name="elegant">
+works.</p><aside name="elegant">
 <p>Writing a book that includes every single line of code for a program means I
-can&rsquo;t hide the hacks by leaving them as an &ldquo;exercise for the reader&rdquo;.</p>
-</aside>
+can&rsquo;t hide the hacks by leaving them as an &ldquo;exercise for the reader&rdquo;.</p></aside>
 <p>Now we&rsquo;re ready to look up and bind the method, starting at the superclass.</p>
 <div class="codehilite"><pre class="insert-before">    LoxInstance object = (LoxInstance)environment.getAt(
         distance - 1, &quot;this&quot;);
@@ -714,8 +699,7 @@ in <em>visitSuperExpr</em>()</div>
 
 <p>There you have it! Take that BostonCream example earlier and give it a try.
 Assuming you and I did everything right, it should fry it first, then stuff it
-with cream.</p>
-<h3><a href="#invalid-uses-of-super" id="invalid-uses-of-super"><small>13&#8202;.&#8202;3&#8202;.&#8202;3</small>Invalid uses of super</a></h3>
+with cream.</p><hnull><a href="#null" id=""></a></hnull>
 <p>As with previous language features, our implementation does the right thing when
 the user writes correct code, but we haven&rsquo;t bulletproofed the intepreter
 against bad code. In particular, consider:</p>
@@ -783,8 +767,7 @@ in <em>visitSuperExpr</em>()</div>
 </pre></div>
 <div class="source-file-narrow"><em>lox/Resolver.java</em>, in <em>visitSuperExpr</em>()</div>
 
-<p>If not<span class="em">&mdash;</span>oopsie!<span class="em">&mdash;</span>the user made a mistake.</p>
-<h2><a href="#conclusion" id="conclusion"><small>13&#8202;.&#8202;4</small>Conclusion</a></h2>
+<p>If not<span class="em">&mdash;</span>oopsie!<span class="em">&mdash;</span>the user made a mistake.</p><hnull><a href="#null" id=""></a></hnull>
 <p>We made it! That final bit of error handling is the last chunk of code needed to
 complete our Java implementation of Lox. This is a real <span
 name="superhero">accomplishment</span> and one you should be proud of. In the
@@ -809,7 +792,8 @@ implemented<span class="ellipse">&thinsp;.&thinsp;.&thinsp;.&nbsp;</span></p>
 <li>methods, and finally,</li>
 <li>inheritance.</li>
 </ul>
-<aside name="superhero"><img src="image/inheritance/superhero.png" alt="You, being your bad self." />
+<aside name="superhero">
+<img src="image/inheritance/superhero.png" alt="You, being your bad self." />
 </aside>
 <p>We did all of that from scratch, with no external dependencies or magic tools.
 Just you and I, our respective text editors, a couple of collection classes in
@@ -817,9 +801,7 @@ the Java standard library, and the JVM runtime.</p>
 <p>This marks the end of Part II, but not the end of the book. Take a break. Maybe
 write a few fun Lox programs and run them in your interpreter. (You may want to
 add a few more native methods for things like reading user input.) When you&rsquo;re
-refreshed and ready, we&rsquo;ll embark on our <a href="a-bytecode-virtual-machine.html">next adventure</a>.</p>
-<div class="challenges">
-<h2><a href="#challenges" id="challenges">Challenges</a></h2>
+refreshed and ready, we&rsquo;ll embark on our <a href="a-bytecode-virtual-machine.html">next adventure</a>.</p><div class="challenges"><hnull><a href="#null" id=""></a></hnull>
 <ol>
 <li>
 <p>Lox supports only <em>single inheritance</em><span class="em">&mdash;</span>a class may have a single

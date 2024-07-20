@@ -108,8 +108,7 @@ language&rsquo;s specification, it&rsquo;s all implementation detail.</p>
 <p>We&rsquo;re going to spend a lot of time on those details, so if I have to write
 &ldquo;language <em>implementation</em>&rdquo; every single time I mention them, I&rsquo;ll wear my
 fingers off. Instead, I&rsquo;ll use &ldquo;language&rdquo; to refer to either a language or an
-implementation of it, or both, unless the distinction matters.</p>
-<h2><a href="#the-parts-of-a-language" id="the-parts-of-a-language"><small>2&#8202;.&#8202;1</small>The Parts of a Language</a></h2>
+implementation of it, or both, unless the distinction matters.</p><hnull><a href="#null" id=""></a></hnull>
 <p>Engineers have been building programming languages since the Dark Ages of
 computing. As soon as we could talk to computers, we discovered doing so was too
 hard, and we enlisted their help. I find it fascinating that even though today&rsquo;s
@@ -121,12 +120,10 @@ exact same path<span class="em">&mdash;</span>some take a shortcut or two<span c
 reassuringly similar, from Rear Admiral Grace Hopper&rsquo;s first COBOL compiler all
 the way to some hot, new, transpile-to-JavaScript language whose &ldquo;documentation&rdquo;
 consists entirely of a single, poorly edited README in a Git repository
-somewhere.</p>
-<aside name="dead">
+somewhere.</p><aside name="dead">
 <p>There are certainly dead ends, sad little cul-de-sacs of CS papers with zero
 citations and now-forgotten optimizations that only made sense when memory was
-measured in individual bytes.</p>
-</aside>
+measured in individual bytes.</p></aside>
 <p>I visualize the network of paths an implementation may choose as climbing a
 mountain. You start off at the bottom with the program as raw source text,
 literally just a string of characters. Each phase analyzes the program and
@@ -138,8 +135,7 @@ the mountain. We transform this highest-level representation down to
 successively lower-level forms to get closer and closer to something we know how
 to make the CPU actually execute.</p><img src="image/a-map-of-the-territory/mountain.png" alt="The branching paths a language may take over the mountain." class="wide" />
 <p>Let&rsquo;s trace through each of those trails and points of interest. Our journey
-begins on the left with the bare text of the user&rsquo;s source code:</p><img src="image/a-map-of-the-territory/string.png" alt="var average = (min + max) / 2;" />
-<h3><a href="#scanning" id="scanning"><small>2&#8202;.&#8202;1&#8202;.&#8202;1</small>Scanning</a></h3>
+begins on the left with the bare text of the user&rsquo;s source code:</p><img src="image/a-map-of-the-territory/string.png" alt="var average = (min + max) / 2;" /><hnull><a href="#null" id=""></a></hnull>
 <p>The first step is <strong>scanning</strong>, also known as <strong>lexing</strong>, or (if you&rsquo;re trying
 to impress someone) <strong>lexical analysis</strong>. They all mean pretty much the same
 thing. I like &ldquo;lexing&rdquo; because it sounds like something an evil supervillain
@@ -149,16 +145,13 @@ commonplace.</p>
 them together into a series of something more akin to <span
 name="word">&ldquo;words&rdquo;</span>. In programming languages, each of these words is
 called a <strong>token</strong>. Some tokens are single characters, like <code>(</code> and <code>,</code>. Others
-may be several characters long, like numbers (<code>123</code>), string literals (<code>"hi!"</code>),
-and identifiers (<code>min</code>).</p>
-<aside name="word">
-<p>&ldquo;Lexical&rdquo; comes from the Greek root &ldquo;lex&rdquo;, meaning &ldquo;word&rdquo;.</p>
-</aside>
+may be several characters long, like numbers (<code>123</code>), string literals (<code>&quot;hi!&quot;</code>),
+and identifiers (<code>min</code>).</p><aside name="word">
+<p>&ldquo;Lexical&rdquo; comes from the Greek root &ldquo;lex&rdquo;, meaning &ldquo;word&rdquo;.</p></aside>
 <p>Some characters in a source file don&rsquo;t actually mean anything. Whitespace is
 often insignificant, and comments, by definition, are ignored by the language.
 The scanner usually discards these, leaving a clean sequence of meaningful
-tokens.</p><img src="image/a-map-of-the-territory/tokens.png" alt="[var] [average] [=] [(] [min] [+] [max] [)] [/] [2] [;]" />
-<h3><a href="#parsing" id="parsing"><small>2&#8202;.&#8202;1&#8202;.&#8202;2</small>Parsing</a></h3>
+tokens.</p><img src="image/a-map-of-the-territory/tokens.png" alt="[var] [average] [=] [(] [min] [+] [max] [)] [/] [2] [;]" /><hnull><a href="#null" id=""></a></hnull>
 <p>The next step is <strong>parsing</strong>. This is where our syntax gets a <strong>grammar</strong><span class="em">&mdash;</span>the
 ability to compose larger expressions and statements out of smaller parts. Did
 you ever diagram sentences in English class? If so, you&rsquo;ve done what a parser
@@ -178,8 +171,7 @@ researchers who were trying to get computers to talk to us.</p>
 could handle, but they were a perfect fit for the simpler artificial grammars of
 programming languages. Alas, we flawed humans still manage to use those simple
 grammars incorrectly, so the parser&rsquo;s job also includes letting us know when we
-do by reporting <strong>syntax errors</strong>.</p>
-<h3><a href="#static-analysis" id="static-analysis"><small>2&#8202;.&#8202;1&#8202;.&#8202;3</small>Static analysis</a></h3>
+do by reporting <strong>syntax errors</strong>.</p><hnull><a href="#null" id=""></a></hnull>
 <p>The first two stages are pretty similar across all implementations. Now, the
 individual characteristics of each language start coming into play. At this
 point, we know the syntactic structure of the code<span class="em">&mdash;</span>things like which
@@ -195,11 +187,9 @@ declaration.</p>
 <p>If the language is <span name="type">statically typed</span>, this is when we
 type check. Once we know where <code>a</code> and <code>b</code> are declared, we can also figure out
 their types. Then if those types don&rsquo;t support being added to each other, we
-report a <strong>type error</strong>.</p>
-<aside name="type">
+report a <strong>type error</strong>.</p><aside name="type">
 <p>The language we&rsquo;ll build in this book is dynamically typed, so it will do its
-type checking later, at runtime.</p>
-</aside>
+type checking later, at runtime.</p></aside>
 <p>Take a deep breath. We have attained the summit of the mountain and a sweeping
 view of the user&rsquo;s program. All this semantic insight that is visible to us from
 analysis needs to be stored somewhere. There are a few places we can squirrel it
@@ -228,8 +218,7 @@ no. Back in the days of yore when &ldquo;front end&rdquo; and &ldquo;back end&rd
 compilers were much simpler. Later researchers invented new phases to stuff
 between the two halves. Rather than discard the old terms, William Wulf and
 company lumped those new phases into the charming but spatially paradoxical name
-<strong>middle end</strong>.</p>
-<h3><a href="#intermediate-representations" id="intermediate-representations"><small>2&#8202;.&#8202;1&#8202;.&#8202;4</small>Intermediate representations</a></h3>
+<strong>middle end</strong>.</p><hnull><a href="#null" id=""></a></hnull>
 <p>You can think of the compiler as a pipeline where each stage&rsquo;s job is to
 organize the data representing the user&rsquo;s code in a way that makes the next
 stage simpler to implement. The front end of the pipeline is specific to the
@@ -238,30 +227,25 @@ final architecture where the program will run.</p>
 <p>In the middle, the code may be stored in some <span name="ir"><strong>intermediate
 representation</strong></span> (<strong>IR</strong>) that isn&rsquo;t tightly tied to either the source or
 destination forms (hence &ldquo;intermediate&rdquo;). Instead, the IR acts as an interface
-between these two languages.</p>
-<aside name="ir">
+between these two languages.</p><aside name="ir">
 <p>There are a few well-established styles of IRs out there. Hit your search engine
 of choice and look for &ldquo;control flow graph&rdquo;, &ldquo;static single-assignment&rdquo;,
-&ldquo;continuation-passing style&rdquo;, and &ldquo;three-address code&rdquo;.</p>
-</aside>
+&ldquo;continuation-passing style&rdquo;, and &ldquo;three-address code&rdquo;.</p></aside>
 <p>This lets you support multiple source languages and target platforms with less
 effort. Say you want to implement Pascal, C, and Fortran compilers, and you want
 to target x86, ARM, and, I dunno, SPARC. Normally, that means you&rsquo;re signing up
-to write <em>nine</em> full compilers: Pascal&rarr;x86, C&rarr;ARM, and every other
+to write <em>nine</em> full compilers: Pascal→x86, C→ARM, and every other
 combination.</p>
 <p>A <span name="gcc">shared</span> intermediate representation reduces that
 dramatically. You write <em>one</em> front end for each source language that produces
 the IR. Then <em>one</em> back end for each target architecture. Now you can mix and
-match those to get every combination.</p>
-<aside name="gcc">
+match those to get every combination.</p><aside name="gcc">
 <p>If you&rsquo;ve ever wondered how <a href="https://en.wikipedia.org/wiki/GNU_Compiler_Collection">GCC</a> supports so many crazy languages and
 architectures, like Modula-3 on Motorola 68k, now you know. Language front ends
 target one of a handful of IRs, mainly <a href="https://gcc.gnu.org/onlinedocs/gccint/GIMPLE.html">GIMPLE</a> and <a href="https://gcc.gnu.org/onlinedocs/gccint/RTL.html">RTL</a>. Target back ends
-like the one for 68k then take those IRs and produce native code.</p>
-</aside>
+like the one for 68k then take those IRs and produce native code.</p></aside>
 <p>There&rsquo;s another big reason we might want to transform the code into a form that
-makes the semantics more apparent<span class="ellipse">&thinsp;.&thinsp;.&thinsp;.&nbsp;</span></p>
-<h3><a href="#optimization" id="optimization"><small>2&#8202;.&#8202;1&#8202;.&#8202;5</small>Optimization</a></h3>
+makes the semantics more apparent<span class="ellipse">&thinsp;.&thinsp;.&thinsp;.&nbsp;</span></p><hnull><a href="#null" id=""></a></hnull>
 <p>Once we understand what the user&rsquo;s program means, we are free to swap it out
 with a different program that has the <em>same semantics</em> but implements them more
 efficiently<span class="em">&mdash;</span>we can <strong>optimize</strong> it.</p>
@@ -280,14 +264,11 @@ faster. It can become a sort of obsession.</p>
 <p>We&rsquo;re mostly going to <span name="rathole">hop over that rathole</span> in this
 book. Many successful languages have surprisingly few compile-time
 optimizations. For example, Lua and CPython generate relatively unoptimized
-code, and focus most of their performance effort on the runtime.</p>
-<aside name="rathole">
+code, and focus most of their performance effort on the runtime.</p><aside name="rathole">
 <p>If you can&rsquo;t resist poking your foot into that hole, some keywords to get you
 started are &ldquo;constant propagation&rdquo;, &ldquo;common subexpression elimination&rdquo;, &ldquo;loop
 invariant code motion&rdquo;, &ldquo;global value numbering&rdquo;, &ldquo;strength reduction&rdquo;, &ldquo;scalar
-replacement of aggregates&rdquo;, &ldquo;dead code elimination&rdquo;, and &ldquo;loop unrolling&rdquo;.</p>
-</aside>
-<h3><a href="#code-generation" id="code-generation"><small>2&#8202;.&#8202;1&#8202;.&#8202;6</small>Code generation</a></h3>
+replacement of aggregates&rdquo;, &ldquo;dead code elimination&rdquo;, and &ldquo;loop unrolling&rdquo;.</p></aside><hnull><a href="#null" id=""></a></hnull>
 <p>We have applied all of the optimizations we can think of to the user&rsquo;s program.
 The last step is converting it to a form the machine can actually run. In other
 words, <strong>generating code</strong> (or <strong>code gen</strong>), where &ldquo;code&rdquo; here usually refers to
@@ -307,13 +288,11 @@ luggage bay.</p>
 architecture. If your compiler targets <a href="https://en.wikipedia.org/wiki/X86">x86</a> machine code, it&rsquo;s not going to
 run on an <a href="https://en.wikipedia.org/wiki/ARM_architecture">ARM</a> device. All the way back in the &rsquo;60s, during the
 Cambrian explosion of computer architectures, that lack of portability was a
-real obstacle.</p>
-<aside name="aad">
+real obstacle.</p><aside name="aad">
 <p>For example, the <a href="http://www.felixcloutier.com/x86/AAD.html">AAD</a> (&ldquo;ASCII Adjust AX Before Division&rdquo;) instruction lets
 you perform division, which sounds useful. Except that instruction takes, as
 operands, two binary-coded decimal digits packed into a single 16-bit register.
-When was the last time <em>you</em> needed BCD on a 16-bit machine?</p>
-</aside>
+When was the last time <em>you</em> needed BCD on a 16-bit machine?</p></aside>
 <p>To get around that, hackers like Martin Richards and Niklaus Wirth, of BCPL and
 Pascal fame, respectively, made their compilers produce <em>virtual</em> machine code.
 Instead of instructions for some real chip, they produced code for a
@@ -323,8 +302,7 @@ single byte long.</p>
 <p>These synthetic instructions are designed to map a little more closely to the
 language&rsquo;s semantics, and not be so tied to the peculiarities of any one
 computer architecture and its accumulated historical cruft. You can think of it
-like a dense, binary encoding of the language&rsquo;s low-level operations.</p>
-<h3><a href="#virtual-machine" id="virtual-machine"><small>2&#8202;.&#8202;1&#8202;.&#8202;7</small>Virtual machine</a></h3>
+like a dense, binary encoding of the language&rsquo;s low-level operations.</p><hnull><a href="#null" id=""></a></hnull>
 <p>If your compiler produces bytecode, your work isn&rsquo;t over once that&rsquo;s done. Since
 there is no chip that speaks that bytecode, it&rsquo;s your job to translate. Again,
 you have two options. You can write a little mini-compiler for each target
@@ -332,24 +310,21 @@ architecture that converts the bytecode to native code for that machine. You
 still have to do work for <span name="shared">each</span> chip you support, but
 this last stage is pretty simple and you get to reuse the rest of the compiler
 pipeline across all of the machines you support. You&rsquo;re basically using your
-bytecode as an intermediate representation.</p>
-<aside name="shared" class="bottom">
+bytecode as an intermediate representation.</p><aside name="shared" class="bottom">
 <p>The basic principle here is that the farther down the pipeline you push the
 architecture-specific work, the more of the earlier phases you can share across
 architectures.</p>
 <p>There is a tension, though. Many optimizations, like register allocation and
 instruction selection, work best when they know the strengths and capabilities
 of a specific chip. Figuring out which parts of your compiler can be shared and
-which should be target-specific is an art.</p>
-</aside>
+which should be target-specific is an art.</p></aside>
 <p>Or you can write a <span name="vm"><strong>virtual machine</strong></span> (<strong>VM</strong>), a
 program that emulates a hypothetical chip supporting your virtual architecture
 at runtime. Running bytecode in a VM is slower than translating it to native
 code ahead of time because every instruction must be simulated at runtime each
 time it executes. In return, you get simplicity and portability. Implement your
 VM in, say, C, and you can run your language on any platform that has a C
-compiler. This is how the second interpreter we build in this book works.</p>
-<aside name="vm">
+compiler. This is how the second interpreter we build in this book works.</p><aside name="vm">
 <p>The term &ldquo;virtual machine&rdquo; also refers to a different kind of abstraction. A
 <strong>system virtual machine</strong> emulates an entire hardware platform and operating
 system in software. This is how you can play Windows games on your Linux
@@ -357,9 +332,7 @@ machine, and how cloud providers give customers the user experience of
 controlling their own &ldquo;server&rdquo; without needing to physically allocate separate
 computers for each user.</p>
 <p>The kind of VMs we&rsquo;ll talk about in this book are <strong>language virtual machines</strong>
-or <strong>process virtual machines</strong> if you want to be unambiguous.</p>
-</aside>
-<h3><a href="#runtime" id="runtime"><small>2&#8202;.&#8202;1&#8202;.&#8202;8</small>Runtime</a></h3>
+or <strong>process virtual machines</strong> if you want to be unambiguous.</p></aside><hnull><a href="#null" id=""></a></hnull>
 <p>We have finally hammered the user&rsquo;s program into a form that we can execute. The
 last step is running it. If we compiled it to machine code, we simply tell the
 operating system to load the executable and off it goes. If we compiled it to
@@ -376,34 +349,29 @@ gets inserted directly into the resulting executable. In, say, <a href="https://
 compiled application has its own copy of Go&rsquo;s runtime directly embedded in it.
 If the language is run inside an interpreter or VM, then the runtime lives
 there. This is how most implementations of languages like Java, Python, and
-JavaScript work.</p>
-<h2><a href="#shortcuts-and-alternate-routes" id="shortcuts-and-alternate-routes"><small>2&#8202;.&#8202;2</small>Shortcuts and Alternate Routes</a></h2>
+JavaScript work.</p><hnull><a href="#null" id=""></a></hnull>
 <p>That&rsquo;s the long path covering every possible phase you might implement. Many
 languages do walk the entire route, but there are a few shortcuts and alternate
-paths.</p>
-<h3><a href="#single-pass-compilers" id="single-pass-compilers"><small>2&#8202;.&#8202;2&#8202;.&#8202;1</small>Single-pass compilers</a></h3>
+paths.</p><hnull><a href="#null" id=""></a></hnull>
 <p>Some simple compilers interleave parsing, analysis, and code generation so that
 they produce output code directly in the parser, without ever allocating any
 syntax trees or other IRs. These <span name="sdt"><strong>single-pass
 compilers</strong></span> restrict the design of the language. You have no intermediate
 data structures to store global information about the program, and you don&rsquo;t
 revisit any previously parsed part of the code. That means as soon as you see
-some expression, you need to know enough to correctly compile it.</p>
-<aside name="sdt">
+some expression, you need to know enough to correctly compile it.</p><aside name="sdt">
 <p><a href="https://en.wikipedia.org/wiki/Syntax-directed_translation"><strong>Syntax-directed translation</strong></a> is a structured technique for building
 these all-at-once compilers. You associate an <em>action</em> with each piece of the
 grammar, usually one that generates output code. Then, whenever the parser
 matches that chunk of syntax, it executes the action, building up the target
-code one rule at a time.</p>
-</aside>
+code one rule at a time.</p></aside>
 <p>Pascal and C were designed around this limitation. At the time, memory was so
 precious that a compiler might not even be able to hold an entire <em>source file</em>
 in memory, much less the whole program. This is why Pascal&rsquo;s grammar requires
 type declarations to appear first in a block. It&rsquo;s why in C you can&rsquo;t call a
 function above the code that defines it unless you have an explicit forward
 declaration that tells the compiler what it needs to know to generate code for a
-call to the later function.</p>
-<h3><a href="#tree-walk-interpreters" id="tree-walk-interpreters"><small>2&#8202;.&#8202;2&#8202;.&#8202;2</small>Tree-walk interpreters</a></h3>
+call to the later function.</p><hnull><a href="#null" id=""></a></hnull>
 <p>Some programming languages begin executing code right after parsing it to an AST
 (with maybe a bit of static analysis applied). To run the program, the
 interpreter traverses the syntax tree one branch and leaf at a time, evaluating
@@ -413,14 +381,11 @@ but is not widely used for <span name="ruby">general-purpose</span> languages
 since it tends to be slow. Some people use &ldquo;interpreter&rdquo; to mean only these
 kinds of implementations, but others define that word more generally, so I&rsquo;ll
 use the inarguably explicit <strong>tree-walk interpreter</strong> to refer to these. Our
-first interpreter rolls this way.</p>
-<aside name="ruby">
+first interpreter rolls this way.</p><aside name="ruby">
 <p>A notable exception is early versions of Ruby, which were tree walkers. At 1.9,
 the canonical implementation of Ruby switched from the original MRI (Matz&rsquo;s Ruby
 Interpreter) to Koichi Sasada&rsquo;s YARV (Yet Another Ruby VM). YARV is a
-bytecode virtual machine.</p>
-</aside>
-<h3><a href="#transpilers" id="transpilers"><small>2&#8202;.&#8202;2&#8202;.&#8202;3</small>Transpilers</a></h3>
+bytecode virtual machine.</p></aside><hnull><a href="#null" id=""></a></hnull>
 <p><span name="gary">Writing</span> a complete back end for a language can be a lot
 of work. If you have some existing generic IR to target, you could bolt your
 front end onto that. Otherwise, it seems like you&rsquo;re stuck. But what if you
@@ -434,8 +399,7 @@ language as your escape route off the mountain and down to something you can
 execute.</p>
 <p>They used to call this a <strong>source-to-source compiler</strong> or a <strong>transcompiler</strong>.
 After the rise of languages that compile to JavaScript in order to run in the
-browser, they&rsquo;ve affected the hipster sobriquet <strong>transpiler</strong>.</p>
-<aside name="gary">
+browser, they&rsquo;ve affected the hipster sobriquet <strong>transpiler</strong>.</p><aside name="gary">
 <p>The first transcompiler, XLT86, translated 8080 assembly into 8086 assembly.
 That might seem straightforward, but keep in mind the 8080 was an 8-bit chip and
 the 8086 a 16-bit chip that could use each register as a pair of 8-bit ones.
@@ -449,8 +413,7 @@ for them.</p>
 host with the Kris Kristofferson-esque look sported by dashing bearded dudes in
 the &rsquo;80s. He took on Bill Gates and, like many, lost, before meeting his end in
 a biker bar under mysterious circumstances. He died too young, but sure as hell
-lived before he did.</p>
-</aside>
+lived before he did.</p></aside>
 <p>While the first transcompiler translated one assembly language to another,
 today, most transpilers work on higher-level languages. After the viral spread
 of UNIX to machines various and sundry, there began a long tradition of
@@ -460,12 +423,10 @@ to get your language running on a lot of architectures.</p>
 <p>Web browsers are the &ldquo;machines&rdquo; of today, and their &ldquo;machine code&rdquo; is
 JavaScript, so these days it seems <a href="https://github.com/jashkenas/coffeescript/wiki/list-of-languages-that-compile-to-js">almost every language out there</a> has a
 compiler that targets JS since that&rsquo;s the <span name="js">main</span> way to get
-your code running in a browser.</p>
-<aside name="js">
+your code running in a browser.</p><aside name="js">
 <p>JS used to be the <em>only</em> way to execute code in a browser. Thanks to
 <a href="https://github.com/webassembly/">WebAssembly</a>, compilers now have a second, lower-level language they can
-target that runs on the web.</p>
-</aside>
+target that runs on the web.</p></aside>
 <p>The front end<span class="em">&mdash;</span>scanner and parser<span class="em">&mdash;</span>of a transpiler looks like other
 compilers. Then, if the source language is only a simple syntactic skin over the
 target language, it may skip analysis entirely and go straight to outputting the
@@ -476,8 +437,7 @@ optimization. Then, when it comes to code generation, instead of outputting some
 binary language like machine code, you produce a string of grammatically correct
 source (well, destination) code in the target language.</p>
 <p>Either way, you then run that resulting code through the output language&rsquo;s
-existing compilation pipeline, and you&rsquo;re good to go.</p>
-<h3><a href="#just-in-time-compilation" id="just-in-time-compilation"><small>2&#8202;.&#8202;2&#8202;.&#8202;4</small>Just-in-time compilation</a></h3>
+existing compilation pipeline, and you&rsquo;re good to go.</p><hnull><a href="#null" id=""></a></hnull>
 <p>This last one is less a shortcut and more a dangerous alpine scramble best
 reserved for experts. The fastest way to execute code is by compiling it to
 machine code, but you might not know what architecture your end user&rsquo;s machine
@@ -492,11 +452,8 @@ say &ldquo;JIT&rdquo;, pronounced like it rhymes with &ldquo;fit&rdquo;.</p>
 <p>The most sophisticated JITs insert profiling hooks into the generated code to
 see which regions are most performance critical and what kind of data is flowing
 through them. Then, over time, they will automatically recompile those <span
-name="hot">hot spots</span> with more advanced optimizations.</p>
-<aside name="hot">
-<p>This is, of course, exactly where the HotSpot JVM gets its name.</p>
-</aside>
-<h2><a href="#compilers-and-interpreters" id="compilers-and-interpreters"><small>2&#8202;.&#8202;3</small>Compilers and Interpreters</a></h2>
+name="hot">hot spots</span> with more advanced optimizations.</p><aside name="hot">
+<p>This is, of course, exactly where the HotSpot JVM gets its name.</p></aside><hnull><a href="#null" id=""></a></hnull>
 <p>Now that I&rsquo;ve stuffed your head with a dictionary&rsquo;s worth of programming
 language jargon, we can finally address a question that&rsquo;s plagued coders since
 time immemorial: What&rsquo;s the difference between a compiler and an interpreter?</p>
@@ -513,8 +470,7 @@ I got this drawing wrong. What can I say, I&rsquo;m a software engineer, not a
 botanist. I should probably erase the little peanut guy, but he&rsquo;s so cute that I
 can&rsquo;t bear to.</p>
 <p>Now <em>pine nuts</em>, on the other hand, are plant-based foods that are neither
-fruits nor vegetables. At least as far as I can tell.</p>
-</aside>
+fruits nor vegetables. At least as far as I can tell.</p></aside>
 <p>So, back to languages:</p>
 <ul>
 <li>
@@ -548,19 +504,17 @@ inside the VM. From the user&rsquo;s perspective, this is clearly an interpreter
 you&rsquo;ll see that there is definitely some compiling going on.</p>
 <p>The answer is that it is <span name="go">both</span>. CPython <em>is</em> an
 interpreter, and it <em>has</em> a compiler. In practice, most scripting languages work
-this way, as you can see:</p>
-<aside name="go">
+this way, as you can see:</p><aside name="go">
 <p>The <a href="https://golang.org/">Go tool</a> is even more of a horticultural curiosity. If you run <code>go build</code>, it compiles your Go source code to machine code and stops. If you type
 <code>go run</code>, it does that, then immediately executes the generated executable.</p>
 <p>So <code>go</code> <em>is</em> a compiler (you can use it as a tool to compile code without
 running it), <em>is</em> an interpreter (you can invoke it to immediately run a program
 from source), and also <em>has</em> a compiler (when you use it as an interpreter, it
-is still compiling internally).</p>
-</aside><img src="image/a-map-of-the-territory/venn.png" alt="A Venn diagram of compilers and interpreters" />
+is still compiling internally).</p></aside>
+<img src="image/a-map-of-the-territory/venn.png" alt="A Venn diagram of compilers and interpreters" />
 <p>That overlapping region in the center is where our second interpreter lives too,
 since it internally compiles to bytecode. So while this book is nominally about
-interpreters, we&rsquo;ll cover some compilation too.</p>
-<h2><a href="#our-journey" id="our-journey"><small>2&#8202;.&#8202;4</small>Our Journey</a></h2>
+interpreters, we&rsquo;ll cover some compilation too.</p><hnull><a href="#null" id=""></a></hnull>
 <p>That&rsquo;s a lot to take in all at once. Don&rsquo;t worry. This isn&rsquo;t the chapter where
 you&rsquo;re expected to <em>understand</em> all of these pieces and parts. I just want you
 to know that they are out there and roughly how they fit together.</p>
@@ -569,12 +523,9 @@ path we take in this book. I want to leave you yearning to strike out on your
 own and wander all over that mountain.</p>
 <p>But, for now, it&rsquo;s time for our own journey to begin. Tighten your bootlaces,
 cinch up your pack, and come along. From <span name="here">here</span> on out,
-all you need to focus on is the path in front of you.</p>
-<aside name="here">
-<p>Henceforth, I promise to tone down the whole mountain metaphor thing.</p>
-</aside>
-<div class="challenges">
-<h2><a href="#challenges" id="challenges">Challenges</a></h2>
+all you need to focus on is the path in front of you.</p><aside name="here">
+<p>Henceforth, I promise to tone down the whole mountain metaphor thing.</p></aside>
+<div class="challenges"><hnull><a href="#null" id=""></a></hnull>
 <ol>
 <li>
 <p>Pick an open source implementation of a language you like. Download the

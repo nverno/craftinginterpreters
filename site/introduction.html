@@ -101,10 +101,8 @@ but because they tell us that dragons can be beaten.</p>
 implementing interpreters for programming languages. It&rsquo;s also a book on how to
 design a language worth implementing. It&rsquo;s the book I wish I&rsquo;d had when I first
 started getting into languages, and it&rsquo;s the book I&rsquo;ve been writing in my <span
-name="head">head</span> for nearly a decade.</p>
-<aside name="head">
-<p>To my friends and family, sorry I&rsquo;ve been so absentminded!</p>
-</aside>
+name="head">head</span> for nearly a decade.</p><aside name="head">
+<p>To my friends and family, sorry I&rsquo;ve been so absentminded!</p></aside>
 <p>In these pages, we will walk step-by-step through two complete interpreters for
 a full-featured language. I assume this is your first foray into languages, so
 I&rsquo;ll cover each concept and line of code you need to build a complete, usable,
@@ -114,30 +112,25 @@ into a doorstop, this text is lighter on theory than others. As we build each
 piece of the system, I will introduce the history and concepts behind it. I&rsquo;ll
 try to get you familiar with the lingo so that if you ever find yourself at a
 <span name="party">cocktail party</span> full of PL (programming language)
-researchers, you&rsquo;ll fit in.</p>
-<aside name="party">
+researchers, you&rsquo;ll fit in.</p><aside name="party">
 <p>Strangely enough, a situation I have found myself in multiple times. You
-wouldn&rsquo;t believe how much some of them can drink.</p>
-</aside>
+wouldn&rsquo;t believe how much some of them can drink.</p></aside>
 <p>But we&rsquo;re mostly going to spend our brain juice getting the language up and
 running. This is not to say theory isn&rsquo;t important. Being able to reason
 precisely and <span name="formal">formally</span> about syntax and semantics is
 a vital skill when working on a language. But, personally, I learn best by
 doing. It&rsquo;s hard for me to wade through paragraphs full of abstract concepts and
 really absorb them. But if I&rsquo;ve coded something, run it, and debugged it, then I
-<em>get</em> it.</p>
-<aside name="formal">
+<em>get</em> it.</p><aside name="formal">
 <p>Static type systems in particular require rigorous formal reasoning. Hacking on
 a type system has the same feel as proving a theorem in mathematics.</p>
 <p>It turns out this is no coincidence. In the early half of last century, Haskell
 Curry and William Alvin Howard showed that they are two sides of the same coin:
-<a href="https://en.wikipedia.org/wiki/Curry%E2%80%93Howard_correspondence">the Curry-Howard isomorphism</a>.</p>
-</aside>
+<a href="https://en.wikipedia.org/wiki/Curry%E2%80%93Howard_correspondence">the Curry-Howard isomorphism</a>.</p></aside>
 <p>That&rsquo;s my goal for you. I want you to come away with a solid intuition of how a
 real language lives and breathes. My hope is that when you read other, more
 theoretical books later, the concepts there will firmly stick in your mind,
-adhered to this tangible substrate.</p>
-<h2><a href="#why-learn-this-stuff" id="why-learn-this-stuff"><small>1&#8202;.&#8202;1</small>Why Learn This Stuff?</a></h2>
+adhered to this tangible substrate.</p><hnull><a href="#null" id=""></a></hnull>
 <p>Every introduction to every compiler book seems to have this section. I don&rsquo;t
 know what it is about programming languages that causes such existential doubt.
 I don&rsquo;t think ornithology books worry about justifying their existence. They
@@ -147,17 +140,14 @@ odds of any of us creating a broadly successful, general-purpose programming
 language are slim. The designers of the world&rsquo;s widely used languages could fit
 in a Volkswagen bus, even without putting the pop-top camper up. If joining that
 elite group was the <em>only</em> reason to learn languages, it would be hard to
-justify. Fortunately, it isn&rsquo;t.</p>
-<h3><a href="#little-languages-are-everywhere" id="little-languages-are-everywhere"><small>1&#8202;.&#8202;1&#8202;.&#8202;1</small>Little languages are everywhere</a></h3>
+justify. Fortunately, it isn&rsquo;t.</p><hnull><a href="#null" id=""></a></hnull>
 <p>For every successful general-purpose language, there are a thousand successful
 niche ones. We used to call them &ldquo;little languages&rdquo;, but inflation in the jargon
 economy led to the name &ldquo;domain-specific languages&rdquo;. These are pidgins
 tailor-built to a specific task. Think application scripting languages, template
 engines, markup formats, and configuration files.</p>
-<p><span name="little"></span><img src="image/introduction/little-languages.png" alt="A random selection of little languages." /></p>
-<aside name="little">
-<p>A random selection of some little languages you might run into.</p>
-</aside>
+<p><span name="little"></span><img src="image/introduction/little-languages.png" alt="A random selection of little languages." /></p><aside name="little">
+<p>A random selection of some little languages you might run into.</p></aside>
 <p>Almost every large software project needs a handful of these. When you can, it&rsquo;s
 good to reuse an existing one instead of rolling your own. Once you factor in
 documentation, debuggers, editor support, syntax highlighting, and all of the
@@ -165,8 +155,7 @@ other trappings, doing it yourself becomes a tall order.</p>
 <p>But there&rsquo;s still a good chance you&rsquo;ll find yourself needing to whip up a parser
 or other tool when there isn&rsquo;t an existing library that fits your needs. Even
 when you are reusing some existing implementation, you&rsquo;ll inevitably end up
-needing to debug and maintain it and poke around in its guts.</p>
-<h3><a href="#languages-are-great-exercise" id="languages-are-great-exercise"><small>1&#8202;.&#8202;1&#8202;.&#8202;2</small>Languages are great exercise</a></h3>
+needing to debug and maintain it and poke around in its guts.</p><hnull><a href="#null" id=""></a></hnull>
 <p>Long distance runners sometimes train with weights strapped to their ankles or
 at high altitudes where the atmosphere is thin. When they later unburden
 themselves, the new relative ease of light limbs and oxygen-rich air enables
@@ -179,8 +168,7 @@ crafted our own from scratch, I guarantee you will.</p>
 <p>While I intend to show you that an interpreter isn&rsquo;t as daunting as you might
 believe, implementing one well is still a challenge. Rise to it, and you&rsquo;ll come
 away a stronger programmer, and smarter about how you use data structures and
-algorithms in your day job.</p>
-<h3><a href="#one-more-reason" id="one-more-reason"><small>1&#8202;.&#8202;1&#8202;.&#8202;3</small>One more reason</a></h3>
+algorithms in your day job.</p><hnull><a href="#null" id=""></a></hnull>
 <p>This last reason is hard for me to admit, because it&rsquo;s so close to my heart.
 Ever since I learned to program as a kid, I felt there was something magical
 about languages. When I first tapped out BASIC programs one key at a time I
@@ -194,12 +182,10 @@ didn&rsquo;t feel like a wizard, so I was left thinking I lacked some inborn qua
 necessary to join the cabal. Though I&rsquo;ve been fascinated by languages ever since
 I doodled made-up keywords in my school notebook, it took me decades to muster
 the courage to try to really learn them. That &ldquo;magical&rdquo; quality, that sense of
-exclusivity, excluded <em>me</em>.</p>
-<aside name="image">
+exclusivity, excluded <em>me</em>.</p><aside name="image">
 <p>And its practitioners don&rsquo;t hesitate to play up this image. Two of the seminal
 texts on programming languages feature a <a href="https://en.wikipedia.org/wiki/Compilers:_Principles,_Techniques,_and_Tools">dragon</a> and a <a href="https://mitpress.mit.edu/sites/default/files/sicp/index.html">wizard</a> on their
-covers.</p>
-</aside>
+covers.</p></aside>
 <p>When I did finally start cobbling together my own little interpreters, I quickly
 learned that, of course, there is no magic at all. It&rsquo;s just code, and the
 people who hack on languages are just people.</p>
@@ -208,8 +194,7 @@ some parts are a little difficult. But not more difficult than other obstacles
 you&rsquo;ve overcome. My hope is that if you&rsquo;ve felt intimidated by languages and
 this book helps you overcome that fear, maybe I&rsquo;ll leave you just a tiny bit
 braver than you were before.</p>
-<p>And, who knows, maybe you <em>will</em> make the next great language. Someone has to.</p>
-<h2><a href="#how-the-book-is-organized" id="how-the-book-is-organized"><small>1&#8202;.&#8202;2</small>How the Book Is Organized</a></h2>
+<p>And, who knows, maybe you <em>will</em> make the next great language. Someone has to.</p><hnull><a href="#null" id=""></a></hnull>
 <p>This book is broken into three parts. You&rsquo;re reading the first one now. It&rsquo;s a
 couple of chapters to get you oriented, teach you some of the lingo that
 language hackers use, and introduce you to Lox, the language we&rsquo;ll be
@@ -224,8 +209,7 @@ but require nothing from later ones. From the very first chapter, you&rsquo;ll h
 working program you can run and play with. With each passing chapter, it grows
 increasingly full-featured until you eventually have a complete language.</p>
 <p>Aside from copious, scintillating English prose, chapters have a few other
-delightful facets:</p>
-<h3><a href="#the-code" id="the-code"><small>1&#8202;.&#8202;2&#8202;.&#8202;1</small>The code</a></h3>
+delightful facets:</p><hnull><a href="#null" id=""></a></hnull>
 <p>We&rsquo;re about <em>crafting</em> interpreters, so this book contains real code. Every
 single line of code needed is included, and each snippet tells you where to
 insert it in your ever-growing implementation.</p>
@@ -233,8 +217,7 @@ insert it in your ever-growing implementation.</p>
 and <span name="yacc"><a href="https://en.wikipedia.org/wiki/Yacc">Yacc</a></span>, so-called <strong>compiler-compilers</strong>, that
 automatically generate some of the source files for an implementation from some
 higher-level description. There are pros and cons to tools like those, and
-strong opinions<span class="em">&mdash;</span>some might say religious convictions<span class="em">&mdash;</span>on both sides.</p>
-<aside name="yacc">
+strong opinions<span class="em">&mdash;</span>some might say religious convictions<span class="em">&mdash;</span>on both sides.</p><aside name="yacc">
 <p>Yacc is a tool that takes in a grammar file and produces a source file for a
 compiler, so it&rsquo;s sort of like a &ldquo;compiler&rdquo; that outputs a compiler, which is
 where we get the term &ldquo;compiler-compiler&rdquo;.</p>
@@ -243,8 +226,7 @@ Another</em> Compiler-Compiler. A later similar tool is <a href="https://en.wiki
 the pronunciation of Yacc like &ldquo;yak&rdquo;.</p><img src="image/introduction/yak.png" alt="A yak." />
 <p>If you find all of these little self-references and puns charming and fun,
 you&rsquo;ll fit right in here. If not, well, maybe the language nerd sense of humor
-is an acquired taste.</p>
-</aside>
+is an acquired taste.</p></aside>
 <p>We will abstain from using them here. I want to ensure there are no dark corners
 where magic and confusion can hide, so we&rsquo;ll write everything by hand. As you&rsquo;ll
 see, it&rsquo;s not as bad as it sounds, and it means you really will understand each
@@ -262,14 +244,12 @@ too. Otherwise, you should probably use <code>//</code> a little more than I do.
 not describe the machinery needed to compile and run the interpreter. I assume
 you can slap together a makefile or a project in your IDE of choice in order to
 get the code to run. Those kinds of instructions get out of date quickly, and
-I want this book to age like XO brandy, not backyard hooch.</p>
-<h3><a href="#snippets" id="snippets"><small>1&#8202;.&#8202;2&#8202;.&#8202;2</small>Snippets</a></h3>
+I want this book to age like XO brandy, not backyard hooch.</p><hnull><a href="#null" id=""></a></hnull>
 <p>Since the book contains literally every line of code needed for the
 implementations, the snippets are quite precise. Also, because I try to keep the
 program in a runnable state even when major features are missing, sometimes we
 add temporary code that gets replaced in later snippets.</p>
-<p>A snippet with all the bells and whistles looks like this:</p>
-<div class="codehilite"><pre class="insert-before">
+<p>A snippet with all the bells and whistles looks like this:</p><div class="codehilite"><pre class="insert-before">
       default:
 </pre><div class="source-file"><em>lox/Scanner.java</em><br>
 in <em>scanToken</em>()<br>
@@ -288,18 +268,14 @@ replace 1 line</div>
 above or below to show where it goes in the existing surrounding code. There is
 also a little blurb telling you in which file and where to place the snippet. If
 that blurb says &ldquo;replace _ lines&rdquo;, there is some existing code between the faded
-lines that you need to remove and replace with the new snippet.</p>
-<h3><a href="#asides" id="asides"><small>1&#8202;.&#8202;2&#8202;.&#8202;3</small>Asides</a></h3>
+lines that you need to remove and replace with the new snippet.</p><hnull><a href="#null" id=""></a></hnull>
 <p><span name="joke">Asides</span> contain biographical sketches, historical
 background, references to related topics, and suggestions of other areas to
 explore. There&rsquo;s nothing that you <em>need</em> to know in them to understand later
 parts of the book, so you can skip them if you want. I won&rsquo;t judge you, but I
-might be a little sad.</p>
-<aside name="joke">
+might be a little sad.</p><aside name="joke">
 <p>Well, some asides do, at least. Most of them are just dumb jokes and amateurish
-drawings.</p>
-</aside>
-<h3><a href="#challenges_" id="challenges_"><small>1&#8202;.&#8202;2&#8202;.&#8202;4</small>Challenges</a></h3>
+drawings.</p></aside><hnull><a href="#null" id=""></a></hnull>
 <p>Each chapter ends with a few exercises. Unlike textbook problem sets, which tend
 to review material you already covered, these are to help you learn <em>more</em> than
 what&rsquo;s in the chapter. They force you to step off the guided path and explore on
@@ -307,51 +283,41 @@ your own. They will make you research other languages, figure out how to
 implement features, or otherwise get you out of your comfort zone.</p>
 <p><span name="warning">Vanquish</span> the challenges and you&rsquo;ll come away with a
 broader understanding and possibly a few bumps and scrapes. Or skip them if you
-want to stay inside the comfy confines of the tour bus. It&rsquo;s your book.</p>
-<aside name="warning">
+want to stay inside the comfy confines of the tour bus. It&rsquo;s your book.</p><aside name="warning">
 <p>A word of warning: the challenges often ask you to make changes to the
 interpreter you&rsquo;re building. You&rsquo;ll want to implement those in a copy of your
 code. The later chapters assume your interpreter is in a pristine
-(&ldquo;unchallenged&rdquo;?) state.</p>
-</aside>
-<h3><a href="#design-notes" id="design-notes"><small>1&#8202;.&#8202;2&#8202;.&#8202;5</small>Design notes</a></h3>
+(&ldquo;unchallenged&rdquo;?) state.</p></aside><hnull><a href="#null" id=""></a></hnull>
 <p>Most &ldquo;programming language&rdquo; books are strictly programming language
 <em>implementation</em> books. They rarely discuss how one might happen to <em>design</em> the
 language being implemented. Implementation is fun because it is so <span
 name="benchmark">precisely defined</span>. We programmers seem to have an
-affinity for things that are black and white, ones and zeroes.</p>
-<aside name="benchmark">
+affinity for things that are black and white, ones and zeroes.</p><aside name="benchmark">
 <p>I know a lot of language hackers whose careers are based on this. You slide a
 language spec under their door, wait a few months, and code and benchmark
-results come out.</p>
-</aside>
+results come out.</p></aside>
 <p>Personally, I think the world needs only so many implementations of <span
 name="fortran">FORTRAN 77</span>. At some point, you find yourself designing a
 <em>new</em> language. Once you start playing <em>that</em> game, then the softer, human side
 of the equation becomes paramount. Things like which features are easy to learn,
 how to balance innovation and familiarity, what syntax is more readable and to
-whom.</p>
-<aside name="fortran">
+whom.</p><aside name="fortran">
 <p>Hopefully your new language doesn&rsquo;t hardcode assumptions about the width of a
-punched card into its grammar.</p>
-</aside>
+punched card into its grammar.</p></aside>
 <p>All of that stuff profoundly affects the success of your new language. I want
 your language to succeed, so in some chapters I end with a &ldquo;design note&rdquo;, a
 little essay on some corner of the human aspect of programming languages. I&rsquo;m no
 expert on this<span class="em">&mdash;</span>I don&rsquo;t know if anyone really is<span class="em">&mdash;</span>so take these with a large
 pinch of salt. That should make them tastier food for thought, which is my main
-aim.</p>
-<h2><a href="#the-first-interpreter" id="the-first-interpreter"><small>1&#8202;.&#8202;3</small>The First Interpreter</a></h2>
+aim.</p><hnull><a href="#null" id=""></a></hnull>
 <p>We&rsquo;ll write our first interpreter, jlox, in <span name="lang">Java</span>. The
 focus is on <em>concepts</em>. We&rsquo;ll write the simplest, cleanest code we can to
 correctly implement the semantics of the language. This will get us comfortable
 with the basic techniques and also hone our understanding of exactly how the
-language is supposed to behave.</p>
-<aside name="lang">
+language is supposed to behave.</p><aside name="lang">
 <p>The book uses Java and C, but readers have ported the code to <a href="https://github.com/munificent/craftinginterpreters/wiki/Lox-implementations">many other
 languages</a>. If the languages I picked aren&rsquo;t your bag, take a look at
-those.</p>
-</aside>
+those.</p></aside>
 <p>Java is a great language for this. It&rsquo;s high level enough that we don&rsquo;t get
 overwhelmed by fiddly implementation details, but it&rsquo;s still pretty explicit.
 Unlike in scripting languages, there tends to be less complex machinery hiding
@@ -366,8 +332,7 @@ zone.</p>
 the reality is that they are widely used even for language work. GCC and LLVM
 are written in C++, as are most JavaScript virtual machines. Object-oriented
 languages are ubiquitous, and the tools and compilers <em>for</em> a language are often
-written <em>in</em> the <span name="host">same language</span>.</p>
-<aside name="host">
+written <em>in</em> the <span name="host">same language</span>.</p><aside name="host">
 <p>A compiler reads files in one language, translates them, and outputs files in
 another language. You can implement a compiler in any language, including the
 same language it compiles, a process called <strong>self-hosting</strong>.</p>
@@ -387,8 +352,7 @@ know another object-oriented language, like C# or C++, you can muddle through.</
 <p>By the end of part II, we&rsquo;ll have a simple, readable implementation. It&rsquo;s not
 very fast, but it&rsquo;s correct. However, we are only able to accomplish that by
 building on the Java virtual machine&rsquo;s own runtime facilities. We want to learn
-how Java <em>itself</em> implements those things.</p>
-<h2><a href="#the-second-interpreter" id="the-second-interpreter"><small>1&#8202;.&#8202;4</small>The Second Interpreter</a></h2>
+how Java <em>itself</em> implements those things.</p><hnull><a href="#null" id=""></a></hnull>
 <p>So in the next part, we start all over again, but this time in C. C is the
 perfect language for understanding how an implementation <em>really</em> works, all the
 way down to the bytes in memory and the code flowing through the CPU.</p>
@@ -403,27 +367,21 @@ implementations are written in C: Lua, CPython, and Ruby&rsquo;s MRI, to name a 
 <p>In our C interpreter, <span name="clox">clox</span>, we are forced to implement
 for ourselves all the things Java gave us for free. We&rsquo;ll write our own dynamic
 array and hash table. We&rsquo;ll decide how objects are represented in memory, and
-build a garbage collector to reclaim them.</p>
-<aside name="clox">
+build a garbage collector to reclaim them.</p><aside name="clox">
 <p>I pronounce the name like &ldquo;sea-locks&rdquo;, but you can say it &ldquo;clocks&rdquo; or even
-&ldquo;cloch&rdquo;, where you pronounce the &ldquo;x&rdquo; like the Greeks do if it makes you happy.</p>
-</aside>
+&ldquo;cloch&rdquo;, where you pronounce the &ldquo;x&rdquo; like the Greeks do if it makes you happy.</p></aside>
 <p>Our Java implementation was focused on being correct. Now that we have that
 down, we&rsquo;ll turn to also being <em>fast</em>. Our C interpreter will contain a <span
 name="compiler">compiler</span> that translates Lox to an efficient bytecode
 representation (don&rsquo;t worry, I&rsquo;ll get into what that means soon), which it then
 executes. This is the same technique used by implementations of Lua, Python,
-Ruby, PHP, and many other successful languages.</p>
-<aside name="compiler">
+Ruby, PHP, and many other successful languages.</p><aside name="compiler">
 <p>Did you think this was just an interpreter book? It&rsquo;s a compiler book as well.
-Two for the price of one!</p>
-</aside>
+Two for the price of one!</p></aside>
 <p>We&rsquo;ll even try our hand at benchmarking and optimization. By the end, we&rsquo;ll have
 a robust, accurate, fast interpreter for our language, able to keep up with
 other professional caliber implementations out there. Not bad for one book and a
-few thousand lines of code.</p>
-<div class="challenges">
-<h2><a href="#challenges" id="challenges">Challenges</a></h2>
+few thousand lines of code.</p><div class="challenges"><hnull><a href="#null" id=""></a></hnull>
 <ol>
 <li>
 <p>There are at least six domain-specific languages used in the <a href="https://github.com/munificent/craftinginterpreters">little system
@@ -441,8 +399,7 @@ find, and delete items from it. Test them.</p>
 </li>
 </ol>
 </div>
-<div class="design-note">
-<h2><a href="#design-note" id="design-note">Design Note: What&rsquo;s in a Name?</a></h2>
+<div class="design-note"><hnull><a href="#null" id=""></a></hnull>
 <p>One of the hardest challenges in writing this book was coming up with a name for
 the language it implements. I went through <em>pages</em> of candidates before I found
 one that worked. As you&rsquo;ll discover on the first day you start building your own
@@ -476,8 +433,7 @@ ironically.)</p>
 up on trying to find an appellation that captures the quintessence of your
 language. If the names of the world&rsquo;s other successful languages teach us
 anything, it&rsquo;s that the name doesn&rsquo;t matter much. All you need is a reasonably
-unique token.</p>
-</div>
+unique token.</p></div>
 
 <footer>
 <a href="a-map-of-the-territory.html" class="next">

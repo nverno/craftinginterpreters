@@ -24,11 +24,12 @@ class BookHeaderSyntax extends BlockSyntax {
     parser.advance();
 
     if (_format.isPrint) {
-      return Element("h${header.level}", [UnparsedContent(header.name)]);
+      return Element(
+          "h${header?.level}", [UnparsedContent(header?.name ?? "")]);
     }
 
     var number = "";
-    if (!header.isSpecial) {
+    if (header != null && !header.isSpecial) {
       number = "${_page.numberString}&#8202;.&#8202;${header.headerIndex}";
       if (header.subheaderIndex != null) {
         number += "&#8202;.&#8202;${header.subheaderIndex}";
@@ -36,12 +37,12 @@ class BookHeaderSyntax extends BlockSyntax {
     }
 
     var link = Element("a", [
-      if (!header.isSpecial) Element("small", [Text(number)]),
-      UnparsedContent(header.name)
+      if (header != null && !header.isSpecial) Element("small", [Text(number)]),
+      UnparsedContent(header?.name ?? "")
     ]);
-    link.attributes["href"] = "#${header.anchor}";
-    link.attributes["id"] = header.anchor;
+    link.attributes["href"] = "#${header?.anchor}";
+    link.attributes["id"] = header?.anchor ?? "";
 
-    return Element("h${header.level}", [link]);
+    return Element("h${header?.level}", [link]);
   }
 }

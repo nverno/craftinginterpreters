@@ -108,8 +108,7 @@ even Booleans and nils which don&rsquo;t need that much space.</p>
 <p>Strings, unfortunately, are not so petite. There&rsquo;s no maximum length for a
 string. Even if we were to artificially cap it at some contrived limit like
 <span name="pascal">255</span> characters, that&rsquo;s still too much memory to spend
-on every single value.</p>
-<aside name="pascal">
+on every single value.</p><aside name="pascal">
 <p>UCSD Pascal, one of the first implementations of Pascal, had this exact limit.
 Instead of using a terminating null byte to indicate the end of the string like
 C, Pascal strings started with a length value. Since UCSD used only a single
@@ -118,8 +117,7 @@ byte to store the length, strings couldn&rsquo;t be any longer than 255 characte
 <p>We need a way to support values whose sizes vary, sometimes greatly. This is
 exactly what dynamic allocation on the heap is designed for. We can allocate as
 many bytes as we need. We get back a pointer that we&rsquo;ll use to keep track of the
-value as it flows through the VM.</p>
-<h2><a href="#values-and-objects" id="values-and-objects"><small>19&#8202;.&#8202;1</small>Values and Objects</a></h2>
+value as it flows through the VM.</p><hnull><a href="#null" id=""></a></hnull>
 <p>Using the heap for larger, variable-sized values and the stack for smaller,
 atomic ones leads to a two-level representation. Every Lox value that you can
 store in a variable or return from an expression will be a Value. For small,
@@ -132,10 +130,8 @@ Each type has its own unique data, but there is also state they all share that
 <a href="garbage-collection.html">our future garbage collector</a> will use to manage their memory.</p><img src="image/strings/value.png" class="wide" alt="Field layout of number and obj values." />
 <p>We&rsquo;ll call this common representation <span name="short">&ldquo;Obj&rdquo;</span>. Each Lox
 value whose state lives on the heap is an Obj. We can thus use a single new
-ValueType case to refer to all heap-allocated types.</p>
-<aside name="short">
-<p>&ldquo;Obj&rdquo; is short for &ldquo;object&rdquo;, natch.</p>
-</aside>
+ValueType case to refer to all heap-allocated types.</p><aside name="short">
+<p>&ldquo;Obj&rdquo; is short for &ldquo;object&rdquo;, natch.</p></aside>
 <div class="codehilite"><pre class="insert-before">  VAL_NUMBER,
 </pre><div class="source-file"><em>value.h</em><br>
 in enum <em>ValueType</em></div>
@@ -185,17 +181,14 @@ typedef struct {
 </pre></div>
 <div class="source-file-narrow"><em>value.h</em></div>
 
-<p>This takes a bare Obj pointer and wraps it in a full Value.</p>
-<h2><a href="#struct-inheritance" id="struct-inheritance"><small>19&#8202;.&#8202;2</small>Struct Inheritance</a></h2>
+<p>This takes a bare Obj pointer and wraps it in a full Value.</p><hnull><a href="#null" id=""></a></hnull>
 <p>Every heap-allocated value is an Obj, but <span name="objs">Objs</span> are
 not all the same. For strings, we need the array of characters. When we get to
 instances, they will need their data fields. A function object will need its
 chunk of bytecode. How do we handle different payloads and sizes? We can&rsquo;t use
-another union like we did for Value since the sizes are all over the place.</p>
-<aside name="objs">
+another union like we did for Value since the sizes are all over the place.</p><aside name="objs">
 <p>No, I don&rsquo;t know how to pronounce &ldquo;objs&rdquo; either. Feels like there should be a
-vowel in there somewhere.</p>
-</aside>
+vowel in there somewhere.</p></aside>
 <p>Instead, we&rsquo;ll use another technique. It&rsquo;s been around for ages, to the point
 that the C specification carves out specific support for it, but I don&rsquo;t know
 that it has a canonical name. It&rsquo;s an example of <a href="https://en.wikipedia.org/wiki/Type_punning"><em>type punning</em></a>, but that
@@ -222,8 +215,7 @@ the &ldquo;value&rdquo; module.</p>
 <div class="source-file-narrow"><em>value.h</em></div>
 
 <p>And the actual definition is in a new module.</p>
-<div class="codehilite"><div class="source-file"><em>object.h</em><br>
-create new file</div>
+<div class="codehilite"><div class="source-file"><em>object.h</em></div>
 <pre><span class="a">#ifndef clox_object_h</span>
 <span class="a">#define clox_object_h</span>
 
@@ -236,7 +228,7 @@ create new file</div>
 
 <span class="a">#endif</span>
 </pre></div>
-<div class="source-file-narrow"><em>object.h</em>, create new file</div>
+<div class="source-file-narrow"><em>object.h</em></div>
 
 <p>Right now, it contains only the type tag. Shortly, we&rsquo;ll add some other
 bookkeeping information for memory management. The type enum is this:</p>
@@ -310,11 +302,10 @@ memory for Obj and for ObjString looks like this:</p><img src="image/strings/obj
 <p>Note how the first bytes of ObjString exactly line up with Obj. This is not a
 coincidence<span class="em">&mdash;</span>C <span name="spec">mandates</span> it. This is designed to
 enable a clever pattern: You can take a pointer to a struct and safely convert
-it to a pointer to its first field and back.</p>
-<aside name="spec">
+it to a pointer to its first field and back.</p><aside name="spec">
 <p>The key part of the spec is:</p>
 <blockquote>
-<p>&sect; 6.7.2.1 13</p>
+<p>§ 6.7.2.1 13</p>
 <p>Within a structure object, the non-bit-field members and the units in which
 bit-fields reside have addresses that increase in the order in which they
 are declared. A pointer to a structure object, suitably converted, points to
@@ -386,8 +377,7 @@ typedef enum {
 <p>These two macros take a Value that is expected to contain a pointer to a valid
 ObjString on the heap. The first one returns the <code>ObjString*</code> pointer. The
 second one steps through that to return the character array itself, since that&rsquo;s
-often what we&rsquo;ll end up needing.</p>
-<h2><a href="#strings" id="strings"><small>19&#8202;.&#8202;3</small>Strings</a></h2>
+often what we&rsquo;ll end up needing.</p><hnull><a href="#null" id=""></a></hnull>
 <p>OK, our VM can now represent string values. It&rsquo;s time to add strings to the
 language itself. As usual, we begin in the front end. The lexer already
 tokenizes string literals, so it&rsquo;s the parser&rsquo;s turn.</p>
@@ -412,11 +402,9 @@ add after <em>number</em>()</div>
 <p>This takes the string&rsquo;s characters <span name="escape">directly</span> from the
 lexeme. The <code>+ 1</code> and <code>- 2</code> parts trim the leading and trailing quotation marks.
 It then creates a string object, wraps it in a Value, and stuffs it into the
-constant table.</p>
-<aside name="escape">
+constant table.</p><aside name="escape">
 <p>If Lox supported string escape sequences like <code>\n</code>, we&rsquo;d translate those here.
-Since it doesn&rsquo;t, we can take the characters as they are.</p>
-</aside>
+Since it doesn&rsquo;t, we can take the characters as they are.</p></aside>
 <p>To create the string, we use <code>copyString()</code>, which is declared in <code>object.h</code>.</p>
 <div class="codehilite"><pre class="insert-before">};
 
@@ -439,8 +427,7 @@ add after struct <em>ObjString</em></div>
 
 <p>Our &ldquo;object&rdquo; module gets an implementation file where we define the new
 function.</p>
-<div class="codehilite"><div class="source-file"><em>object.c</em><br>
-create new file</div>
+<div class="codehilite"><div class="source-file"><em>object.c</em></div>
 <pre><span class="a">#include &lt;stdio.h&gt;</span>
 <span class="a">#include &lt;string.h&gt;</span>
 
@@ -456,7 +443,7 @@ create new file</div>
   <span class="k">return</span> <span class="i">allocateString</span>(<span class="i">heapChars</span>, <span class="i">length</span>);
 }
 </pre></div>
-<div class="source-file-narrow"><em>object.c</em>, create new file</div>
+<div class="source-file-narrow"><em>object.c</em></div>
 
 <p>First, we allocate a new array on the heap, just big enough for the string&rsquo;s
 characters and the trailing <span name="terminator">terminator</span>, using
@@ -473,15 +460,13 @@ count:</p>
 <div class="source-file-narrow"><em>memory.h</em></div>
 
 <p>Once we have the array, we copy over the characters from the lexeme and
-terminate it.</p>
-<aside name="terminator" class="bottom">
+terminate it.</p><aside name="terminator" class="bottom">
 <p>We need to terminate the string ourselves because the lexeme points at a range
 of characters inside the monolithic source string and isn&rsquo;t terminated.</p>
 <p>Since ObjString stores the length explicitly, we <em>could</em> leave the character
 array unterminated, but slapping a terminator on the end costs us only a byte
 and lets us pass the character array to C standard library functions that expect
-a terminated string.</p>
-</aside>
+a terminated string.</p></aside>
 <p>You might wonder why the ObjString can&rsquo;t just point back to the original
 characters in the source string. Some ObjStrings will be created dynamically at
 runtime as a result of string operations like concatenation. Those strings
@@ -521,12 +506,10 @@ static ObjString* allocateString(char* chars, int length) {
 
 <p><span name="factored">Like</span> the previous macro, this exists mainly to
 avoid the need to redundantly cast a <code>void*</code> back to the desired type. The
-actual functionality is here:</p>
-<aside name="factored">
+actual functionality is here:</p><aside name="factored">
 <p>I admit this chapter has a sea of helper functions and macros to wade through. I
 try to keep the code nicely factored, but that leads to a scattering of tiny
-functions. They will pay off when we reuse them later.</p>
-</aside>
+functions. They will pay off when we reuse them later.</p></aside>
 <div class="codehilite"><pre class="insert-before">#define ALLOCATE_OBJ(type, objectType) \
     (type*)allocateObject(sizeof(type), objectType)
 </pre><div class="source-file"><em>object.c</em></div>
@@ -550,13 +533,11 @@ type being created.</p>
 <p>Then it initializes the Obj state<span class="em">&mdash;</span>right now, that&rsquo;s just the type tag. This
 function returns to <code>allocateString()</code>, which finishes initializing the ObjString
 fields. <span name="viola"><em>Voilà</em></span>, we can compile and execute string
-literals.</p>
-<aside name="viola"><img src="image/strings/viola.png" class="above" alt="A viola." />
+literals.</p><aside name="viola">
+<img src="image/strings/viola.png" class="above" alt="A viola." />
 <p>Don&rsquo;t get &ldquo;voilà&rdquo; confused with &ldquo;viola&rdquo;. One means &ldquo;there it is&rdquo; and the other
 is a string instrument, the middle child between a violin and a cello. Yes, I
-did spend two hours drawing a viola just to mention that.</p>
-</aside>
-<h2><a href="#operations-on-strings" id="operations-on-strings"><small>19&#8202;.&#8202;4</small>Operations on Strings</a></h2>
+did spend two hours drawing a viola just to mention that.</p></aside><hnull><a href="#null" id=""></a></hnull>
 <p>Our fancy strings are there, but they don&rsquo;t do much of anything yet. A good
 first step is to make the existing print code not barf on the new value type.</p>
 <div class="codehilite"><pre class="insert-before">    case VAL_NUMBER: printf(&quot;%g&quot;, AS_NUMBER(value)); break;
@@ -594,10 +575,8 @@ add after <em>copyString</em>()</div>
 
 <p>We have only a single object type now, but this function will sprout additional
 switch cases in later chapters. For string objects, it simply <span
-name="term-2">prints</span> the character array as a C string.</p>
-<aside name="term-2">
-<p>I told you terminating the string would come in handy.</p>
-</aside>
+name="term-2">prints</span> the character array as a C string.</p><aside name="term-2">
+<p>I told you terminating the string would come in handy.</p></aside>
 <p>The equality operators also need to gracefully handle strings. Consider:</p>
 <div class="codehilite"><pre><span class="s">&quot;string&quot;</span> == <span class="s">&quot;string&quot;</span>
 </pre></div>
@@ -644,8 +623,7 @@ need a couple of includes. Here:</p>
 </pre><pre class="insert-after">#include &quot;memory.h&quot;
 </pre></div>
 <div class="source-file-narrow"><em>value.c</em></div>
-
-<h3><a href="#concatenation" id="concatenation"><small>19&#8202;.&#8202;4&#8202;.&#8202;1</small>Concatenation</a></h3>
+<hnull><a href="#null" id=""></a></hnull>
 <p>Full-grown languages provide lots of operations for working with strings<span class="em">&mdash;</span>access to individual characters, the string&rsquo;s length, changing case, splitting,
 joining, searching, etc. When you implement your language, you&rsquo;ll likely want
 all that. But for this book, we keep things <em>very</em> minimal.</p>
@@ -679,14 +657,12 @@ replace 1 line</div>
 
 <p>If both operands are strings, it concatenates. If they&rsquo;re both numbers, it adds
 them. Any other <span name="convert">combination</span> of operand types is a
-runtime error.</p>
-<aside name="convert" class="bottom">
+runtime error.</p><aside name="convert" class="bottom">
 <p>This is more conservative than most languages. In other languages, if one
 operand is a string, the other can be any type and it will be implicitly
 converted to a string before concatenating the two.</p>
 <p>I think that&rsquo;s a fine feature, but would require writing tedious &ldquo;convert to
-string&rdquo; code for each type, so I left it out of Lox.</p>
-</aside>
+string&rdquo; code for each type, so I left it out of Lox.</p></aside>
 <p>To concatenate strings, we define a new function.</p>
 <div class="codehilite"><div class="source-file"><em>vm.c</em><br>
 add after <em>isFalsey</em>()</div>
@@ -757,15 +733,13 @@ ownership of the string you give it.</p>
 </pre><pre class="insert-after">#include &quot;vm.h&quot;
 </pre></div>
 <div class="source-file-narrow"><em>vm.c</em></div>
-
-<h2><a href="#freeing-objects" id="freeing-objects"><small>19&#8202;.&#8202;5</small>Freeing Objects</a></h2>
+<hnull><a href="#null" id=""></a></hnull>
 <p>Behold this innocuous-seeming expression:</p>
 <div class="codehilite"><pre><span class="s">&quot;st&quot;</span> + <span class="s">&quot;ri&quot;</span> + <span class="s">&quot;ng&quot;</span>
 </pre></div>
 <p>When the compiler chews through this, it allocates an ObjString for each of
 those three string literals and stores them in the chunk&rsquo;s constant table and
-generates this <span name="stack">bytecode</span>:</p>
-<aside name="stack">
+generates this <span name="stack">bytecode</span>:</p><aside name="stack">
 <p>Here&rsquo;s what the stack looks like after each instruction:</p><img src="image/strings/stack.png" alt="The state of the stack at each instruction." />
 </aside>
 <div class="codehilite"><pre>0000    OP_CONSTANT         0 &quot;st&quot;
@@ -775,13 +749,13 @@ generates this <span name="stack">bytecode</span>:</p>
 0007    OP_ADD
 0008    OP_RETURN
 </pre></div>
-<p>The first two instructions push <code>"st"</code> and <code>"ri"</code> onto the stack. Then the
+<p>The first two instructions push <code>&quot;st&quot;</code> and <code>&quot;ri&quot;</code> onto the stack. Then the
 <code>OP_ADD</code> pops those and concatenates them. That dynamically allocates a new
-<code>"stri"</code> string on the heap. The VM pushes that and then pushes the <code>"ng"</code>
-constant. The last <code>OP_ADD</code> pops <code>"stri"</code> and <code>"ng"</code>, concatenates them, and
-pushes the result: <code>"string"</code>. Great, that&rsquo;s what we expect.</p>
-<p>But, wait. What happened to that <code>"stri"</code> string? We dynamically allocated it,
-then the VM discarded it after concatenating it with <code>"ng"</code>. We popped it from
+<code>&quot;stri&quot;</code> string on the heap. The VM pushes that and then pushes the <code>&quot;ng&quot;</code>
+constant. The last <code>OP_ADD</code> pops <code>&quot;stri&quot;</code> and <code>&quot;ng&quot;</code>, concatenates them, and
+pushes the result: <code>&quot;string&quot;</code>. Great, that&rsquo;s what we expect.</p>
+<p>But, wait. What happened to that <code>&quot;stri&quot;</code> string? We dynamically allocated it,
+then the VM discarded it after concatenating it with <code>&quot;ng&quot;</code>. We popped it from
 the stack and no longer have a reference to it, but we never freed its memory.
 We&rsquo;ve got ourselves a classic memory leak.</p>
 <p>Of course, it&rsquo;s perfectly fine for the <em>Lox program</em> to forget about
@@ -792,8 +766,7 @@ memory on the user&rsquo;s behalf. The responsibility to manage memory doesn&rsq
 reclaims unused memory while the program is running. We&rsquo;ve got some other stuff
 to get in place before we&rsquo;re ready to tackle that project. Until then, we are
 living on borrowed time. The longer we wait to add the collector, the harder it
-is to do.</p>
-<aside name="borrowed">
+is to do.</p><aside name="borrowed">
 <p>I&rsquo;ve seen a number of people implement large swathes of their language before
 trying to start on the GC. For the kind of toy programs you typically run while
 a language is being developed, you actually don&rsquo;t run out of memory before
@@ -805,8 +778,7 @@ language implementation can squirrel away a reference to some object. If you
 don&rsquo;t find all of them, you get nightmarish bugs.</p>
 <p>I&rsquo;ve seen language implementations die because it was too hard to get the GC in
 later. If your language needs GC, get it working as soon as you can. It&rsquo;s a
-crosscutting concern that touches the entire codebase.</p>
-</aside>
+crosscutting concern that touches the entire codebase.</p></aside>
 <p>Today, we should at least do the bare minimum: avoid <em>leaking</em> memory by making
 sure the VM can still find every allocated object even if the Lox program itself
 no longer references them. There are many sophisticated techniques that advanced
@@ -945,13 +917,11 @@ and then free the ObjString. Those both use one last memory management macro.</p
 <div class="source-file-narrow"><em>memory.h</em></div>
 
 <p>It&rsquo;s a tiny <span name="free">wrapper</span> around <code>reallocate()</code> that
-&ldquo;resizes&rdquo; an allocation down to zero bytes.</p>
-<aside name="free">
+&ldquo;resizes&rdquo; an allocation down to zero bytes.</p><aside name="free">
 <p>Using <code>reallocate()</code> to free memory might seem pointless. Why not just call
 <code>free()</code>? Later, this will help the VM track how much memory is still being
 used. If all allocation and freeing goes through <code>reallocate()</code>, it&rsquo;s easy to
-keep a running count of the number of bytes of allocated memory.</p>
-</aside>
+keep a running count of the number of bytes of allocated memory.</p></aside>
 <p>As usual, we need an include to wire everything together.</p>
 <div class="codehilite"><pre class="insert-before">#include &quot;common.h&quot;
 </pre><div class="source-file"><em>memory.h</em></div>
@@ -982,9 +952,7 @@ is a big step. We now have the infrastructure to support a variety of different
 kinds of dynamically allocated objects. And we&rsquo;ve used that to add strings to
 clox, one of the most used types in most programming languages. Strings in turn
 enable us to build another fundamental data type, especially in dynamic
-languages: the venerable <a href="hash-tables.html">hash table</a>. But that&rsquo;s for the next chapter<span class="ellipse">&thinsp;.&thinsp;.&thinsp;.&nbsp;</span></p>
-<div class="challenges">
-<h2><a href="#challenges" id="challenges">Challenges</a></h2>
+languages: the venerable <a href="hash-tables.html">hash table</a>. But that&rsquo;s for the next chapter<span class="ellipse">&thinsp;.&thinsp;.&thinsp;.&nbsp;</span></p><div class="challenges"><hnull><a href="#null" id=""></a></hnull>
 <ol>
 <li>
 <p>Each string requires two separate dynamic allocations<span class="em">&mdash;</span>one for the
@@ -1011,8 +979,7 @@ choice. What do other languages do?</p>
 </li>
 </ol>
 </div>
-<div class="design-note">
-<h2><a href="#design-note" id="design-note">Design Note: String Encoding</a></h2>
+<div class="design-note"><hnull><a href="#null" id=""></a></hnull>
 <p>In this book, I try not to shy away from the gnarly problems you&rsquo;ll run into in
 a real language implementation. We might not always use the most <em>sophisticated</em>
 solution<span class="em">&mdash;</span>it&rsquo;s an intro book after all<span class="em">&mdash;</span>but I don&rsquo;t think it&rsquo;s honest to
@@ -1028,11 +995,11 @@ specified what they were. It was great<span class="ellipse">&thinsp;.&thinsp;.&t
 English. While it has weird, mostly forgotten characters like &ldquo;record
 separator&rdquo; and &ldquo;synchronous idle&rdquo;, it doesn&rsquo;t have a single umlaut, acute,
 or grave. It can&rsquo;t represent &ldquo;jalapeño&rdquo;, &ldquo;naïve&rdquo;, <span
-name="gruyere">&ldquo;Gruyère&rdquo;</span>, or &ldquo;Mötley Crüe&rdquo;.</p>
-<aside name="gruyere">
+name="gruyere">&ldquo;Gruyère&rdquo;</span>, or &ldquo;Mötley Crüe&rdquo;.</p><aside name="gruyere">
+
 <p>It goes without saying that a language that does not let one discuss Gruyère
-or Mötley Crüe is a language not worth using.</p>
-</aside>
+or Mötley Crüe is a language not worth using.</p></aside>
+
 <p>Next came <a href="https://en.wikipedia.org/wiki/Unicode">Unicode</a>. Initially, it supported 16,384 different characters
 (<strong>code points</strong>), which fit nicely in 16 bits with a couple of bits to
 spare. Later that grew and grew, and now there are well over 100,000
@@ -1044,7 +1011,7 @@ visible glyph a language might support. To handle that, Unicode also has
 &ldquo;a&rdquo; followed by the combining character &ldquo;¨&rdquo; gives you &ldquo;ä&rdquo;. (To make things
 more confusing Unicode <em>also</em> has a single code point that looks like &ldquo;ä&rdquo;.)</p>
 <p>If a user accesses the fourth &ldquo;character&rdquo; in &ldquo;naïve&rdquo;, do they expect to get
-back &ldquo;v&rdquo; or &ldquo;¨&rdquo;? The former means they are thinking of each code
+back &ldquo;v&rdquo; or “¨”? The former means they are thinking of each code
 point and its combining character as a single unit<span class="em">&mdash;</span>what Unicode calls an
 <strong>extended grapheme cluster</strong><span class="em">&mdash;</span>the latter means they are thinking in
 individual code points. Which do your users expect?</p>
@@ -1067,12 +1034,10 @@ is without walking and decoding all of the preceding ones.</p>
 </ul>
 <p>Choosing a character representation and encoding involves fundamental
 trade-offs. Like many things in engineering, there&rsquo;s no <span
-name="python">perfect</span> solution:</p>
-<aside name="python">
+name="python">perfect</span> solution:</p><aside name="python">
 <p>An example of how difficult this problem is comes from Python. The achingly long
 transition from Python 2 to 3 is painful mostly because of its changes around
-string encoding.</p>
-</aside>
+string encoding.</p></aside>
 <ul>
 <li>
 <p>ASCII is memory efficient and fast, but it kicks non-Latin languages to the
@@ -1114,8 +1079,7 @@ but not much more complex. You lose fast direct indexing by code point, but you
 can usually live without that or afford to make it <em>O(n)</em> instead of <em>O(1)</em>.</p>
 <p>If I were designing a big workhorse language for people writing large
 applications, I&rsquo;d probably go with the maximal approach. For my little embedded
-scripting language <a href="http://wren.io">Wren</a>, I went with UTF-8 and code points.</p>
-</div>
+scripting language <a href="http://wren.io">Wren</a>, I went with UTF-8 and code points.</p></div>
 
 <footer>
 <a href="hash-tables.html" class="next">

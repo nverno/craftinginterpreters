@@ -19,10 +19,10 @@ class HtmlRenderer implements NodeVisitor {
     "ul",
   };
 
-  StringBuffer buffer;
+  StringBuffer? buffer;
 
   final _elementStack = <Element>[];
-  String _lastVisitedTag;
+  String? _lastVisitedTag;
 
   String render(List<Node> nodes) {
     buffer = StringBuffer();
@@ -31,7 +31,7 @@ class HtmlRenderer implements NodeVisitor {
       node.accept(this);
     }
 
-    buffer.writeln();
+    buffer!.writeln();
 
     return buffer.toString();
   }
@@ -44,39 +44,39 @@ class HtmlRenderer implements NodeVisitor {
         content.startsWith("</aside") ||
         content.startsWith("<div") ||
         content.startsWith("</div")) {
-      buffer.writeln();
+      buffer!.writeln();
     }
 
     if (const ['p', 'li'].contains(_lastVisitedTag)) {
       content = content.trimLeft();
     }
-    buffer.write(content);
+    buffer!.write(content);
 
     _lastVisitedTag = null;
   }
 
   bool visitElementBefore(Element element) {
     // Separate block-level elements with newlines.
-    if (buffer.isNotEmpty && _blockTags.contains(element.tag)) {
-      buffer.writeln();
+    if (buffer!.isNotEmpty && _blockTags.contains(element.tag)) {
+      buffer!.writeln();
     }
 
-    buffer.write('<${element.tag}');
+    buffer!.write('<${element.tag}');
 
     for (var entry in element.attributes.entries) {
-      buffer.write(' ${entry.key}="${entry.value}"');
+      buffer!.write(' ${entry.key}="${entry.value}"');
     }
 
     _lastVisitedTag = element.tag;
 
     if (element.isEmpty) {
       // Empty element like <hr/>.
-      buffer.write(' />');
-      if (element.tag == 'br') buffer.write('\n');
+      buffer!.write(' />');
+      if (element.tag == 'br') buffer!.write('\n');
       return false;
     } else {
       _elementStack.add(element);
-      buffer.write('>');
+      buffer!.write('>');
       return true;
     }
   }
@@ -85,14 +85,14 @@ class HtmlRenderer implements NodeVisitor {
     assert(identical(_elementStack.last, element));
 
     if (element.children != null &&
-        element.children.isNotEmpty &&
+        element.children!.isNotEmpty &&
         _blockTags.contains(_lastVisitedTag) &&
         _blockTags.contains(element.tag)) {
-      buffer.writeln();
+      buffer!.writeln();
     } else if (element.tag == 'blockquote') {
-      buffer.writeln();
+      buffer!.writeln();
     }
-    buffer.write('</${element.tag}>');
+    buffer!.write('</${element.tag}>');
 
     _lastVisitedTag = _elementStack.removeLast().tag;
   }

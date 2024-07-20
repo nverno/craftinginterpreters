@@ -27,7 +27,7 @@ class XmlRenderer implements NodeVisitor {
   final List<_Inline> _inlineStack = [];
 
   /// The stack tracking where we are in the document.
-  _Context _context = _Context("main");
+  _Context? _context = _Context("main");
 
   String render(List<Node> nodes) {
     for (final node in nodes) {
@@ -37,13 +37,13 @@ class XmlRenderer implements NodeVisitor {
     var buffer = StringBuffer();
     buffer.writeln("<chapter>");
 
-    _Paragraph previousMain;
-    _Paragraph previousAside;
+    _Paragraph? previousMain;
+    _Paragraph? previousAside;
 
     for (var paragraph in _paragraphs) {
       String text;
 
-      if (paragraph.context.has("aside")) {
+      if (paragraph.context!.has("aside")) {
         text = paragraph.prettyPrint(previousAside);
         previousAside = paragraph;
       } else {
@@ -60,7 +60,7 @@ class XmlRenderer implements NodeVisitor {
       var tags = _tagPattern.allMatches(text).map((match) => match[1]).toSet();
       if (tags.difference(allTags).isNotEmpty) {
         tagFileBuffer.write(text);
-        allTags.addAll(tags);
+        allTags.addAll(tags as Set<String>);
       }
     }
 
@@ -118,15 +118,15 @@ class XmlRenderer implements NodeVisitor {
 
     // Convert image tags to just their paths.
     if (text.startsWith("<img")) {
-      var imagePath = _imagePathPattern.firstMatch(text)[1];
+      var imagePath = _imagePathPattern.firstMatch(text)![1];
 
       // The GC chapter has a couple of tiny inline images that happen to be in
       // an unordered list. Don't create paragraphs for them.
-      var isInline = _context.has("unordered");
+      var isInline = _context!.has("unordered");
 
       // Put main column images in their own paragraph.
       if (!isInline) _push("image");
-      _addText(imagePath);
+      _addText(imagePath!);
       if (!isInline) _pop();
       return;
     }
@@ -168,7 +168,7 @@ class XmlRenderer implements NodeVisitor {
       // We're in an inline tag, so add it to that.
       _inlineStack.last.text += text;
     } else {
-      if (_context.name == "xml") {
+      if (_context?.name == "xml") {
         // Hackish. Assume the only <em> tags inside XML blocks are in cites.
         text = text
             .replaceAll("<em>", "<cite-em>")
@@ -223,7 +223,7 @@ class XmlRenderer implements NodeVisitor {
       case "li":
         // If we're on the first item, discard it and replace it with the next
         // item. The first item restarts numbering but later ones don't.
-        if (_context.name != "first") _push("item");
+        if (_context?.name != "first") _push("item");
         break;
 
       case "a":
@@ -248,7 +248,7 @@ class XmlRenderer implements NodeVisitor {
             _inlineStack[i] = _Inline(inline.tag);
           }
 
-          tagParts.add(inline.tag);
+          tagParts.add(inline.tag!);
         }
 
         String tag;
@@ -285,7 +285,7 @@ class XmlRenderer implements NodeVisitor {
         // If we still have a context for the item, it means we have a Markdown
         // list with no paragraph tags inside the items. There are a couple of
         // those in the book.
-        if (_context.name == "first" || _context.name == "item") _pop();
+        if (_context?.name == "first" || _context?.name == "item") _pop();
 
         // Pop the list itself.
         _pop();
@@ -303,7 +303,7 @@ class XmlRenderer implements NodeVisitor {
 
         // We match both <p> and <li> so that lists without paragraphs inside
         // don't leave lingering item contexts.
-        if (_context.name == "first" || _context.name == "item") _pop();
+        if (_context?.name == "first" || _context?.name == "item") _pop();
         break;
 
       case "code":
@@ -325,7 +325,7 @@ class XmlRenderer implements NodeVisitor {
   }
 
   void _pop() {
-    _context = _context.parent;
+    _context = _context?.parent;
     _resetParagraph();
   }
 
@@ -335,7 +335,7 @@ class XmlRenderer implements NodeVisitor {
     // Discard any leading whitespace at the beginning of list items.
     var paragraph = _paragraphs.last;
     if (paragraph.contents.isEmpty &&
-        (_context.has("ordered") || _context.has("unordered"))) {
+        (_context!.has("ordered") || _context!.has("unordered"))) {
       text = text.trimLeft();
     }
 
@@ -360,13 +360,13 @@ class XmlRenderer implements NodeVisitor {
 
 class _Context {
   final String name;
-  final _Context parent;
+  final _Context? parent;
 
   _Context(this.name, [this.parent]);
 
   /// Whether any of the contexts in this chain are [name].
   bool has(String name) {
-    var context = this;
+    var context = this as _Context?;
     while (context != null) {
       if (context.name == name) return true;
       context = context.parent;
@@ -376,13 +376,13 @@ class _Context {
   }
 
   /// Whether [parent] has [name].
-  bool isIn(String name) => parent != null && parent.has(name);
+  bool isIn(String name) => parent != null && parent!.has(name);
 
   /// How many levels of list nesting this context contains.
   int get listDepth {
     var depth = 0;
 
-    for (var context = this; context != null; context = context.parent) {
+    for (var context = this as _Context?; context != null; context = context.parent) {
       if (context.name == "ordered" || context.name == "unordered") {
         depth++;
       } else if (context.name == "aside") {
@@ -419,7 +419,7 @@ class _Context {
 
       case "first":
       case "item":
-        tag = "${parent.name}-$tag";
+        tag = "${parent?.name}-$tag";
         if (depth > 1) tag = "sublist-$tag";
         break;
 
@@ -467,7 +467,7 @@ class _Context {
 
 /// A paragraph-level tag that contains text and inline tags.
 class _Paragraph {
-  final _Context context;
+  final _Context? context;
 
   final List<_Inline> contents = [];
 
@@ -496,18 +496,18 @@ class _Paragraph {
     return false;
   }
 
-  String prettyPrint(_Paragraph previous) {
+  String prettyPrint(_Paragraph? previous) {
     var buffer = StringBuffer();
-    var tag = context.paragraphTag;
+    var tag = context!.paragraphTag;
 
-    if (previous != null && _isNext(tag, previous.context.paragraphTag)) {
+    if (previous != null && _isNext(tag, previous.context!.paragraphTag)) {
       tag += "-next";
     }
 
     if (tag != "xml") buffer.write("<$tag>");
 
     for (var inline in contents) {
-      inline.prettyPrint(buffer, context);
+      inline.prettyPrint(buffer, context!);
     }
 
     if (tag != "xml") buffer.write("</$tag>");
@@ -519,7 +519,7 @@ class _Paragraph {
 /// An inline tag or plain text.
 class _Inline {
   /// The tag name if this is an inline tag or `null` if it is text.
-  final String tag;
+  final String? tag;
 
   String text;
 

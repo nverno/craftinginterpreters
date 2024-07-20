@@ -1,9 +1,9 @@
-BUILD_DIR := build
-TOOL_SOURCES := tool/pubspec.lock $(shell find tool -name '*.dart')
+BUILD_DIR      := build
+TOOL_SOURCES   := tool/pubspec.lock $(shell find tool -name '*.dart')
 BUILD_SNAPSHOT := $(BUILD_DIR)/build.dart.snapshot
-TEST_SNAPSHOT := $(BUILD_DIR)/test.dart.snapshot
+TEST_SNAPSHOT  := $(BUILD_DIR)/test.dart.snapshot
 
-default: book clox jlox
+default: clox jlox # book
 
 # Run dart pub get on tool directory.
 get:

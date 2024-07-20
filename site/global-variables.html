@@ -112,16 +112,14 @@ simple, clean way to learn how to manage state.</p>
 call a function is not the road to a fast VM. Given how much code is concerned
 with using variables, if variables go slow, everything goes slow. For clox,
 we&rsquo;ll improve that by using a much more efficient strategy for <span
-name="different">local</span> variables, but globals aren&rsquo;t as easily optimized.</p>
-<aside name="different">
+name="different">local</span> variables, but globals aren&rsquo;t as easily optimized.</p><aside name="different">
 <p>This is a common meta-strategy in sophisticated language implementations. Often,
 the same language feature will have multiple implementation techniques, each
 tuned for different use patterns. For example, JavaScript VMs often have a
 faster representation for objects that are used more like instances of classes
 compared to other objects whose set of properties is more freely modified. C and
 C++ compilers usually have a variety of ways to compile <code>switch</code> statements
-based on the number of cases and how densely packed the case values are.</p>
-</aside>
+based on the number of cases and how densely packed the case values are.</p></aside>
 <p>A quick refresher on Lox semantics: Global variables in Lox are &ldquo;late bound&rdquo;, or
 resolved dynamically. This means you can compile a chunk of code that refers to
 a global variable before it&rsquo;s defined. As long as the code doesn&rsquo;t <em>execute</em>
@@ -141,8 +139,7 @@ one line, then define the variable it uses in the next.</p>
 occurs before it is used, the VM can resolve them at compile time, even in a
 simple single-pass compiler. That will let us use a smarter representation for
 locals. But that&rsquo;s for the next chapter. Right now, let&rsquo;s just worry about
-globals.</p>
-<h2><a href="#statements" id="statements"><small>21&#8202;.&#8202;1</small>Statements</a></h2>
+globals.</p><hnull><a href="#null" id=""></a></hnull>
 <p>Variables come into being using variable declarations, which means now is also
 the time to add support for statements to our compiler. If you recall, Lox
 splits statements into two categories. &ldquo;Declarations&rdquo; are those statements that
@@ -173,12 +170,10 @@ flow body.</p>
 includes <code>statement</code> so that all statement types are allowed. Since <code>block</code>
 itself is in <code>statement</code>, you can put declarations <span
 name="parens">inside</span> a control flow construct by nesting them inside a
-block.</p>
-<aside name="parens">
+block.</p><aside name="parens">
 <p>Blocks work sort of like parentheses do for expressions. A block lets you put
 the &ldquo;lower-precedence&rdquo; declaration statements in places where only a
-&ldquo;higher-precedence&rdquo; non-declaring statement is allowed.</p>
-</aside>
+&ldquo;higher-precedence&rdquo; non-declaring statement is allowed.</p></aside>
 <p>In this chapter, we&rsquo;ll cover only a couple of statements and one
 declaration.</p>
 <div class="codehilite"><pre><span class="i">statement</span>      → <span class="i">exprStmt</span>
@@ -237,8 +232,7 @@ add after <em>expression</em>()</div>
 </pre><pre class="insert-after">static ParseRule* getRule(TokenType type);
 </pre></div>
 <div class="source-file-narrow"><em>compiler.c</em>, add after <em>expression</em>()</div>
-
-<h3><a href="#print-statements" id="print-statements"><small>21&#8202;.&#8202;1&#8202;.&#8202;1</small>Print statements</a></h3>
+<hnull><a href="#null" id=""></a></hnull>
 <p>We have two statement types to support in this chapter. Let&rsquo;s start with <code>print</code>
 statements, which begin, naturally enough, with a <code>print</code> token. We detect that
 using this helper function:</p>
@@ -255,10 +249,8 @@ add after <em>consume</em>()</div>
 <p>You may recognize it from jlox. If the current token has the given type, we
 consume the token and return <code>true</code>. Otherwise we leave the token alone and
 return <code>false</code>. This <span name="turtles">helper</span> function is implemented
-in terms of this other helper:</p>
-<aside name="turtles">
-<p>It&rsquo;s helpers all the way down!</p>
-</aside>
+in terms of this other helper:</p><aside name="turtles">
+<p>It&rsquo;s helpers all the way down!</p></aside>
 <div class="codehilite"><div class="source-file"><em>compiler.c</em><br>
 add after <em>consume</em>()</div>
 <pre><span class="k">static</span> <span class="t">bool</span> <span class="i">check</span>(<span class="t">TokenType</span> <span class="i">type</span>) {
@@ -270,13 +262,11 @@ add after <em>consume</em>()</div>
 <p>The <code>check()</code> function returns <code>true</code> if the current token has the given type.
 It seems a little <span name="read">silly</span> to wrap this in a function, but
 we&rsquo;ll use it more later, and I think short verb-named functions like this make
-the parser easier to read.</p>
-<aside name="read">
+the parser easier to read.</p><aside name="read">
 <p>This sounds trivial, but handwritten parsers for non-toy languages get pretty
 big. When you have thousands of lines of code, a utility function that turns two
 lines into one and makes the result a little more readable easily earns its
-keep.</p>
-</aside>
+keep.</p></aside>
 <p>If we did match the <code>print</code> token, then we compile the rest of the statement
 here:</p>
 <div class="codehilite"><div class="source-file"><em>compiler.c</em><br>
@@ -320,8 +310,7 @@ pop and print it.</p>
 between expressions and statements in the VM. Every bytecode instruction has a
 <span name="effect"><strong>stack effect</strong></span> that describes how the instruction
 modifies the stack. For example, <code>OP_ADD</code> pops two values and pushes one,
-leaving the stack one element smaller than before.</p>
-<aside name="effect">
+leaving the stack one element smaller than before.</p><aside name="effect">
 <p>The stack is one element shorter after an <code>OP_ADD</code>, so its effect is -1:</p><img src="image/global-variables/stack-effect.png" alt="The stack effect of an OP_ADD instruction." />
 </aside>
 <p>You can sum the stack effects of a series of instructions to get their total
@@ -347,11 +336,9 @@ replace 2 lines</div>
 <p>When the VM only compiled and evaluated a single expression, we had some
 temporary code in <code>OP_RETURN</code> to output the value. Now that we have statements
 and <code>print</code>, we don&rsquo;t need that anymore. We&rsquo;re one <span
-name="return">step</span> closer to the complete implementation of clox.</p>
-<aside name="return">
+name="return">step</span> closer to the complete implementation of clox.</p><aside name="return">
 <p>We&rsquo;re only one step closer, though. We will revisit <code>OP_RETURN</code> again when we
-add functions. Right now, it exits the entire interpreter loop.</p>
-</aside>
+add functions. Right now, it exits the entire interpreter loop.</p></aside>
 <p>As usual, a new instruction needs support in the disassembler.</p>
 <div class="codehilite"><pre class="insert-before">      return simpleInstruction(&quot;OP_NEGATE&quot;, offset);
 </pre><div class="source-file"><em>debug.c</em><br>
@@ -367,8 +354,7 @@ in <em>disassembleInstruction</em>()</div>
 <span class="k">print</span> <span class="n">3</span> * <span class="n">4</span>;
 </pre></div>
 <p>Exciting! OK, maybe not thrilling, but we can build scripts that contain as many
-statements as we want now, which feels like progress.</p>
-<h3><a href="#expression-statements" id="expression-statements"><small>21&#8202;.&#8202;1&#8202;.&#8202;2</small>Expression statements</a></h3>
+statements as we want now, which feels like progress.</p><hnull><a href="#null" id=""></a></hnull>
 <p>Wait until you see the next statement. If we <em>don&rsquo;t</em> see a <code>print</code> keyword, then
 we must be looking at an expression statement.</p>
 <div class="codehilite"><pre class="insert-before">    printStatement();
@@ -432,12 +418,9 @@ in <em>disassembleInstruction</em>()</div>
 <p>Expression statements aren&rsquo;t very useful yet since we can&rsquo;t create any
 expressions that have side effects, but they&rsquo;ll be essential when we
 <a href="calls-and-functions.html">add functions later</a>. The <span name="majority">majority</span> of
-statements in real-world code in languages like C are expression statements.</p>
-<aside name="majority">
+statements in real-world code in languages like C are expression statements.</p><aside name="majority">
 <p>By my count, 80 of the 149 statements, in the version of &ldquo;compiler.c&rdquo; that we
-have at the end of this chapter are expression statements.</p>
-</aside>
-<h3><a href="#error-synchronization" id="error-synchronization"><small>21&#8202;.&#8202;1&#8202;.&#8202;3</small>Error synchronization</a></h3>
+have at the end of this chapter are expression statements.</p></aside><hnull><a href="#null" id=""></a></hnull>
 <p>While we&rsquo;re getting this initial work done in the compiler, we can tie off a
 loose end we left <a href="compiling-expressions.html#handling-syntax-errors">several chapters back</a>. Like jlox, clox uses panic
 mode error recovery to minimize the number of cascaded compile errors that it
@@ -488,16 +471,13 @@ add after <em>printStatement</em>()</div>
 statement boundary. We recognize the boundary by looking for a preceding token
 that can end a statement, like a semicolon. Or we&rsquo;ll look for a subsequent token
 that begins a statement, usually one of the control flow or declaration
-keywords.</p>
-<h2><a href="#variable-declarations" id="variable-declarations"><small>21&#8202;.&#8202;2</small>Variable Declarations</a></h2>
+keywords.</p><hnull><a href="#null" id=""></a></hnull>
 <p>Merely being able to <em>print</em> doesn&rsquo;t win your language any prizes at the
 programming language <span name="fair">fair</span>, so let&rsquo;s move on to
 something a little more ambitious and get variables going. There are three
-operations we need to support:</p>
-<aside name="fair">
+operations we need to support:</p><aside name="fair">
 <p>I can&rsquo;t help but imagine a &ldquo;language fair&rdquo; like some country 4H thing. Rows of
-straw-lined stalls full of baby languages <em>moo</em>ing and <em>baa</em>ing at each other.</p>
-</aside>
+straw-lined stalls full of baby languages <em>moo</em>ing and <em>baa</em>ing at each other.</p></aside>
 <ul>
 <li>Declaring a new variable using a <code>var</code> statement.</li>
 <li>Accessing the value of a variable using an identifier expression.</li>
@@ -545,8 +525,7 @@ add after <em>expression</em>()</div>
 followed by an initializer expression. If the user doesn&rsquo;t initialize the
 variable, the compiler implicitly initializes it to <span
 name="nil"><code>nil</code></span> by emitting an <code>OP_NIL</code> instruction. Either way, we
-expect the statement to be terminated with a semicolon.</p>
-<aside name="nil" class="bottom">
+expect the statement to be terminated with a semicolon.</p><aside name="nil" class="bottom">
 <p>Essentially, the compiler desugars a variable declaration like:</p>
 <div class="codehilite"><pre><span class="k">var</span> <span class="i">a</span>;
 </pre></div>
@@ -554,8 +533,7 @@ expect the statement to be terminated with a semicolon.</p>
 <div class="codehilite"><pre><span class="k">var</span> <span class="i">a</span> = <span class="k">nil</span>;
 </pre></div>
 <p>The code it generates for the former is identical to what it produces for the
-latter.</p>
-</aside>
+latter.</p></aside>
 <p>There are two new functions here for working with variables and identifiers.
 Here is the first:</p>
 <div class="codehilite"><pre class="insert-before">static void parsePrecedence(Precedence precedence);
@@ -605,13 +583,11 @@ the new variable and stores its initial value. The index of the variable&rsquo;s
 in the constant table is the instruction&rsquo;s operand. As usual in a stack-based
 VM, we emit this instruction last. At runtime, we execute the code for the
 variable&rsquo;s initializer first. That leaves the value on the stack. Then this
-instruction takes that value and stores it away for later.</p>
-<aside name="helper">
+instruction takes that value and stores it away for later.</p><aside name="helper">
 <p>I know some of these functions seem pretty pointless right now. But we&rsquo;ll get
 more mileage out of them as we add more language features for working with
 names. Function and class declarations both declare new variables, and variable
-and assignment expressions access them.</p>
-</aside>
+and assignment expressions access them.</p></aside>
 <p>Over in the runtime, we begin with this new instruction:</p>
 <div class="codehilite"><pre class="insert-before">  OP_POP,
 </pre><div class="source-file"><em>chunk.h</em><br>
@@ -637,13 +613,11 @@ in <em>run</em>()</div>
 
 <p>We get the name of the variable from the constant table. Then we <span
 name="pop">take</span> the value from the top of the stack and store it in a
-hash table with that name as the key.</p>
-<aside name="pop">
+hash table with that name as the key.</p><aside name="pop">
 <p>Note that we don&rsquo;t <em>pop</em> the value until <em>after</em> we add it to the hash table.
 That ensures the VM can still find the value if a garbage collection is
 triggered right in the middle of adding it to the hash table. That&rsquo;s a distinct
-possibility since the hash table requires dynamic allocation when it resizes.</p>
-</aside>
+possibility since the hash table requires dynamic allocation when it resizes.</p></aside>
 <p>This code doesn&rsquo;t check to see if the key is already in the table. Lox is pretty
 lax with global variables and lets you redefine them without error. That&rsquo;s
 useful in a REPL session, so the VM supports that by simply overwriting the
@@ -695,11 +669,9 @@ in <em>initVM</em>()</div>
 </pre></div>
 <div class="source-file-narrow"><em>vm.c</em>, in <em>initVM</em>()</div>
 
-<p>And we <span name="tear">tear</span> it down when we exit.</p>
-<aside name="tear">
+<p>And we <span name="tear">tear</span> it down when we exit.</p><aside name="tear">
 <p>The process will free everything on exit, but it feels undignified to require
-the operating system to clean up our mess.</p>
-</aside>
+the operating system to clean up our mess.</p></aside>
 <div class="codehilite"><pre class="insert-before">void freeVM() {
 </pre><div class="source-file"><em>vm.c</em><br>
 in <em>freeVM</em>()</div>
@@ -720,8 +692,7 @@ in <em>disassembleInstruction</em>()</div>
 <div class="source-file-narrow"><em>debug.c</em>, in <em>disassembleInstruction</em>()</div>
 
 <p>And with that, we can define global variables. Not that users can <em>tell</em> that
-they&rsquo;ve done so, because they can&rsquo;t actually <em>use</em> them. So let&rsquo;s fix that next.</p>
-<h2><a href="#reading-variables" id="reading-variables"><small>21&#8202;.&#8202;3</small>Reading Variables</a></h2>
+they&rsquo;ve done so, because they can&rsquo;t actually <em>use</em> them. So let&rsquo;s fix that next.</p><hnull><a href="#null" id=""></a></hnull>
 <p>As in every programming language ever, we access a variable&rsquo;s value using its
 name. We hook up identifier tokens to the expression parser here:</p>
 <div class="codehilite"><pre class="insert-before">  [TOKEN_LESS_EQUAL]    = {NULL,     binary, PREC_COMPARISON},
@@ -804,15 +775,12 @@ run code like this:</p>
 <span class="k">var</span> <span class="i">breakfast</span> = <span class="s">&quot;beignets with &quot;</span> + <span class="i">beverage</span>;
 <span class="k">print</span> <span class="i">breakfast</span>;
 </pre></div>
-<p>There&rsquo;s only one operation left.</p>
-<h2><a href="#assignment" id="assignment"><small>21&#8202;.&#8202;4</small>Assignment</a></h2>
+<p>There&rsquo;s only one operation left.</p><hnull><a href="#null" id=""></a></hnull>
 <p>Throughout this book, I&rsquo;ve tried to keep you on a fairly safe and easy path. I
 don&rsquo;t avoid hard <em>problems</em>, but I try to not make the <em>solutions</em> more complex
 than they need to be. Alas, other design choices in our <span
-name="jlox">bytecode</span> compiler make assignment annoying to implement.</p>
-<aside name="jlox">
-<p>If you recall, assignment was pretty easy in jlox.</p>
-</aside>
+name="jlox">bytecode</span> compiler make assignment annoying to implement.</p><aside name="jlox">
+<p>If you recall, assignment was pretty easy in jlox.</p></aside>
 <p>Our bytecode VM uses a single-pass compiler. It parses and generates bytecode
 on the fly without any intermediate AST. As soon as it recognizes a piece of
 syntax, it emits code for it. Assignment doesn&rsquo;t naturally fit that. Consider:</p>
@@ -887,13 +855,11 @@ in <em>run</em>()</div>
 <p>The main difference is what happens when the key doesn&rsquo;t already exist in the
 globals hash table. If the variable hasn&rsquo;t been defined yet, it&rsquo;s a runtime
 error to try to assign to it. Lox <a href="statements-and-state.html#design-note">doesn&rsquo;t do implicit variable
-declaration</a>.</p>
-<aside name="delete">
+declaration</a>.</p><aside name="delete">
 <p>The call to <code>tableSet()</code> stores the value in the global variable table even if
 the variable wasn&rsquo;t previously defined. That fact is visible in a REPL session,
 since it keeps running even after the runtime error is reported. So we also take
-care to delete that zombie value from the table.</p>
-</aside>
+care to delete that zombie value from the table.</p></aside>
 <p>The other difference is that setting a variable doesn&rsquo;t pop the value off the
 stack. Remember, assignment is an expression, so it needs to leave that value
 there in case the assignment is nested inside some larger expression.</p>
@@ -914,13 +880,11 @@ in <em>disassembleInstruction</em>()</div>
 <p>According to Lox&rsquo;s grammar, <code>=</code> has the lowest precedence, so this should be
 parsed roughly like:</p><img src="image/global-variables/ast-good.png" alt="The expected parse, like '(a * b) = (c + d)'." />
 <p>Obviously, <code>a * b</code> isn&rsquo;t a <span name="do">valid</span> assignment target, so
-this should be a syntax error. But here&rsquo;s what our parser does:</p>
-<aside name="do">
+this should be a syntax error. But here&rsquo;s what our parser does:</p><aside name="do">
 <p>Wouldn&rsquo;t it be wild if <code>a * b</code> <em>was</em> a valid assignment target, though? You
 could imagine some algebra-like language that tried to divide the assigned value
 up in some reasonable way and distribute it to <code>a</code> and <code>b</code><span class="ellipse">&thinsp;.&thinsp;.&thinsp;.&nbsp;</span>that&rsquo;s probably
-a terrible idea.</p>
-</aside>
+a terrible idea.</p></aside>
 <ol>
 <li>First, <code>parsePrecedence()</code> parses <code>a</code> using the <code>variable()</code> prefix parser.</li>
 <li>After that, it enters the infix parsing loop.</li>
@@ -1020,11 +984,9 @@ parse functions. But those functions are stored in a table of function pointers,
 so all of the parse functions need to have the same type. Even though most parse
 functions don&rsquo;t support being used as an assignment target<span class="em">&mdash;</span>setters are the
 <span name="index">only</span> other one<span class="em">&mdash;</span>our friendly C compiler requires
-them <em>all</em> to accept the parameter.</p>
-<aside name="index">
+them <em>all</em> to accept the parameter.</p><aside name="index">
 <p>If Lox had arrays and subscript operators like <code>array[index]</code> then an infix <code>[</code>
-would also allow assignment to support <code>array[index] = value</code>.</p>
-</aside>
+would also allow assignment to support <code>array[index] = value</code>.</p></aside>
 <p>So we&rsquo;re going to finish off this chapter with some grunt work. First, let&rsquo;s go
 ahead and pass the flag to the infix parse functions.</p>
 <div class="codehilite"><pre class="insert-before">    ParseFn infixRule = getRule(parser.previous.type)-&gt;infix;
@@ -1113,9 +1075,7 @@ this:</p>
 
 <span class="k">print</span> <span class="i">breakfast</span>;
 </pre></div>
-<p>It&rsquo;s starting to look like real code for an actual language!</p>
-<div class="challenges">
-<h2><a href="#challenges" id="challenges">Challenges</a></h2>
+<p>It&rsquo;s starting to look like real code for an actual language!</p><div class="challenges"><hnull><a href="#null" id=""></a></hnull>
 <ol>
 <li>
 <p>The compiler adds a global variable&rsquo;s name to the constant table as a string

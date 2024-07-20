@@ -92,7 +92,7 @@
 
 <blockquote>
 <p>You can choose your friends but you sho&rsquo; can&rsquo;t choose your family, an&rsquo; they&rsquo;re
-still kin to you no matter whether you acknowledge &rsquo;em or not, and it
+still kin to you no matter whether you acknowledge ’em or not, and it
 makes you look right silly when you don&rsquo;t.</p>
 <p><cite>Harper Lee, <em>To Kill a Mockingbird</em></cite></p>
 </blockquote>
@@ -101,18 +101,15 @@ packed almost the entire Lox language in there already. All that remains is
 inheriting methods and calling superclass methods. We have <a href="optimization.html">another
 chapter</a> after this one, but it introduces no new behavior. It
 <span name="faster">only</span> makes existing stuff faster. Make it to the end
-of this one, and you&rsquo;ll have a complete Lox implementation.</p>
-<aside name="faster">
+of this one, and you&rsquo;ll have a complete Lox implementation.</p><aside name="faster">
 <p>That &ldquo;only&rdquo; should not imply that making stuff faster isn&rsquo;t important! After
 all, the whole purpose of our entire second virtual machine is better
 performance over jlox. You could argue that <em>all</em> of the past fifteen chapters
-are &ldquo;optimization&rdquo;.</p>
-</aside>
+are &ldquo;optimization&rdquo;.</p></aside>
 <p>Some of the material in this chapter will remind you of jlox. The way we resolve
 super calls is pretty much the same, though viewed through clox&rsquo;s more complex
 mechanism for storing state on the stack. But we have an entirely different,
-much faster, way of handling inherited method calls this time around.</p>
-<h2><a href="#inheriting-methods" id="inheriting-methods"><small>29&#8202;.&#8202;1</small>Inheriting Methods</a></h2>
+much faster, way of handling inherited method calls this time around.</p><hnull><a href="#null" id=""></a></hnull>
 <p>We&rsquo;ll kick things off with method inheritance since it&rsquo;s the simpler piece. To
 refresh your memory, Lox inheritance syntax looks like this:</p>
 <div class="codehilite"><pre><span class="k">class</span> <span class="t">Doughnut</span> {
@@ -177,13 +174,10 @@ in <em>classDeclaration</em>()</div>
 
 <p><span name="cycle">A</span> class cannot be its own superclass. Unless you have
 access to a deranged nuclear physicist and a very heavily modified DeLorean, you
-cannot inherit from yourself.</p>
-<aside name="cycle">
+cannot inherit from yourself.</p><aside name="cycle">
 <p>Interestingly, with the way we implement method inheritance, I don&rsquo;t think
 allowing cycles would actually cause any problems in clox. It wouldn&rsquo;t do
-anything <em>useful</em>, but I don&rsquo;t think it would cause a crash or infinite loop.</p>
-</aside>
-<h3><a href="#executing-inheritance" id="executing-inheritance"><small>29&#8202;.&#8202;1&#8202;.&#8202;1</small>Executing inheritance</a></h3>
+anything <em>useful</em>, but I don&rsquo;t think it would cause a crash or infinite loop.</p></aside><hnull><a href="#null" id=""></a></hnull>
 <p>Now onto the new instruction.</p>
 <div class="codehilite"><pre class="insert-before">  OP_CLASS,
 </pre><div class="source-file"><em>chunk.h</em><br>
@@ -239,8 +233,7 @@ for inheritance at all. By the time the class is declared, the work is done.
 This means inherited method calls are exactly as fast as normal method calls<span class="em">&mdash;</span>a <span name="two">single</span> hash table lookup.</p><img src="image/superclasses/clox-resolve.png" alt="Resolving a call to cook() in an instance of Cruller which has the method in its own method table." />
 <aside name="two">
 <p>Well, two hash table lookups, I guess. Because first we have to make sure a
-field on the instance doesn&rsquo;t shadow the method.</p>
-</aside>
+field on the instance doesn&rsquo;t shadow the method.</p></aside>
 <p>I&rsquo;ve sometimes heard this technique called &ldquo;copy-down inheritance&rdquo;. It&rsquo;s simple
 and fast, but, like most optimizations, you get to use it only under certain
 constraints. It works in Lox because Lox classes are <em>closed</em>. Once a class
@@ -252,8 +245,7 @@ it or even remove them. That would break our optimization because if those
 modifications happened to a superclass <em>after</em> the subclass declaration
 executed, the subclass would not pick up those changes. That breaks a user&rsquo;s
 expectation that inheritance always reflects the current state of the
-superclass.</p>
-<aside name="monkey">
+superclass.</p><aside name="monkey">
 <p>As you can imagine, changing the set of methods a class defines imperatively at
 runtime can make it hard to reason about a program. It is a very powerful tool,
 but also a dangerous tool.</p>
@@ -269,8 +261,7 @@ We emit the <code>OP_INHERIT</code> after the <code>OP_CLASS</code> instruction 
 subclass but before any method declarations and <code>OP_METHOD</code> instructions have
 been compiled. At the point that we copy the superclass&rsquo;s methods down, the
 subclass&rsquo;s method table is empty. Any methods the subclass overrides will
-overwrite those inherited entries in the table.</p>
-<h3><a href="#invalid-superclasses" id="invalid-superclasses"><small>29&#8202;.&#8202;1&#8202;.&#8202;2</small>Invalid superclasses</a></h3>
+overwrite those inherited entries in the table.</p><hnull><a href="#null" id=""></a></hnull>
 <p>Our implementation is simple and fast, which is just the way I like my VM code.
 But it&rsquo;s not robust. Nothing prevents a user from inheriting from an object that
 isn&rsquo;t a class at all:</p>
@@ -294,21 +285,18 @@ in <em>run</em>()</div>
 
 <p>If the value we loaded from the identifier in the superclass clause isn&rsquo;t an
 ObjClass, we report a runtime error to let the user know what we think of them
-and their code.</p>
-<h2><a href="#storing-superclasses" id="storing-superclasses"><small>29&#8202;.&#8202;2</small>Storing Superclasses</a></h2>
+and their code.</p><hnull><a href="#null" id=""></a></hnull>
 <p>Did you notice that when we added method inheritance, we didn&rsquo;t actually add any
 reference from a subclass to its superclass? After we copy the inherited methods
 over, we forget the superclass entirely. We don&rsquo;t need to keep a handle on the
 superclass, so we don&rsquo;t.</p>
 <p>That won&rsquo;t be sufficient to support super calls. Since a subclass <span
 name="may">may</span> override the superclass method, we need to be able to get
-our hands on superclass method tables. Before we get to that mechanism, I want 
-to refresh your memory on how super calls are statically resolved.</p>
-<aside name="may">
+our hands on superclass method tables. Before we get to that mechanism, I want
+to refresh your memory on how super calls are statically resolved.</p><aside name="may">
 <p>&ldquo;May&rdquo; might not be a strong enough word. Presumably the method <em>has</em> been
 overridden. Otherwise, why are you bothering to use <code>super</code> instead of just
-calling it directly?</p>
-</aside>
+calling it directly?</p></aside>
 <p>Back in the halcyon days of jlox, I showed you <a href="inheritance.html#semantics">this tricky example</a> to
 explain the way super calls are dispatched:</p>
 <div class="codehilite"><pre><span class="k">class</span> <span class="t">A</span> {
@@ -371,8 +359,7 @@ variable and tell the runtime to start looking for methods there.</p>
 <p>We&rsquo;ll take the same path with clox. The difference is that instead of jlox&rsquo;s
 heap-allocated Environment class, we have the bytecode VM&rsquo;s value stack and
 upvalue system. The machinery is a little different, but the overall effect is
-the same.</p>
-<h3><a href="#a-superclass-local-variable" id="a-superclass-local-variable"><small>29&#8202;.&#8202;2&#8202;.&#8202;1</small>A superclass local variable</a></h3>
+the same.</p><hnull><a href="#null" id=""></a></hnull>
 <p>Our compiler already emits code to load the superclass onto the stack. Instead
 of leaving that slot as a temporary, we create a new scope and make it a local
 variable.</p>
@@ -417,8 +404,7 @@ add after <em>variable</em>()</div>
 lexeme. If we tried to use a heap-allocated string for this, we&rsquo;d end up leaking
 memory because it never gets freed. But the memory for C string literals lives
 in the executable&rsquo;s constant data section and never needs to be freed, so we&rsquo;re
-fine.</p>
-</aside>
+fine.</p></aside>
 <p>Since we opened a local scope for the superclass variable, we need to close it.</p>
 <div class="codehilite"><pre class="insert-before">  emitByte(OP_POP);
 </pre><div class="source-file"><em>compiler.c</em><br>
@@ -475,14 +461,11 @@ of the surrounding subclass from within any of the subclass&rsquo;s methods<span
 emit code to load the variable named &ldquo;super&rdquo;. That variable is a local outside
 of the method body, but our existing upvalue support enables the VM to capture
 that local inside the body of the method or even in functions nested inside that
-method.</p>
-<h2><a href="#super-calls" id="super-calls"><small>29&#8202;.&#8202;3</small>Super Calls</a></h2>
+method.</p><hnull><a href="#null" id=""></a></hnull>
 <p>With that runtime support in place, we are ready to implement super calls. As
 usual, we go front to back, starting with the new syntax. A super call <span
-name="last">begins</span>, naturally enough, with the <code>super</code> keyword.</p>
-<aside name="last">
-<p>This is it, friend. The very last entry you&rsquo;ll add to the parsing table.</p>
-</aside>
+name="last">begins</span>, naturally enough, with the <code>super</code> keyword.</p><aside name="last">
+<p>This is it, friend. The very last entry you&rsquo;ll add to the parsing table.</p></aside>
 <div class="codehilite"><pre class="insert-before">  [TOKEN_RETURN]        = {NULL,     NULL,   PREC_NONE},
 </pre><div class="source-file"><em>compiler.c</em><br>
 replace 1 line</div>
@@ -508,11 +491,9 @@ a <code>super</code> <span name="token">token</span> is not a standalone express
 Instead, the dot and method name following it are inseparable parts of the
 syntax. However, the parenthesized argument list is separate. As with normal
 method access, Lox supports getting a reference to a superclass method as a
-closure without invoking it:</p>
-<aside name="token">
+closure without invoking it:</p><aside name="token">
 <p>Hypothetical question: If a bare <code>super</code> token <em>was</em> an expression, what kind of
-object would it evaluate to?</p>
-</aside>
+object would it evaluate to?</p></aside>
 <div class="codehilite"><pre><span class="k">class</span> <span class="t">A</span> {
   <span class="i">method</span>() {
     <span class="k">print</span> <span class="s">&quot;A&quot;</span>;
@@ -572,7 +553,7 @@ make it tangible, consider this example program:</p>
   }
 }
 </pre></div>
-<p>The bytecode emitted for the <code>super.finish("icing")</code> expression looks and works
+<p>The bytecode emitted for the <code>super.finish(&quot;icing&quot;)</code> expression looks and works
 like this:</p><img src="image/superclasses/super-instructions.png" alt="The series of bytecode instructions for calling super.finish()." />
 <p>The first three instructions give the runtime access to the three pieces of
 information it needs to perform the super access:</p>
@@ -610,8 +591,7 @@ in <em>super_</em>()</div>
 <p>A super call is meaningful only inside the body of a method (or in a function
 nested inside a method), and only inside the method of a class that has a
 superclass. We detect both of these cases using the value of <code>currentClass</code>. If
-that&rsquo;s <code>NULL</code> or points to a class with no superclass, we report those errors.</p>
-<h3><a href="#executing-super-accesses" id="executing-super-accesses"><small>29&#8202;.&#8202;3&#8202;.&#8202;1</small>Executing super accesses</a></h3>
+that&rsquo;s <code>NULL</code> or points to a class with no superclass, we report those errors.</p><hnull><a href="#null" id=""></a></hnull>
 <p>Assuming the user didn&rsquo;t put a <code>super</code> expression where it&rsquo;s not allowed, their
 code passes from the compiler over to the runtime. We&rsquo;ve got ourselves a new
 instruction.</p>
@@ -668,17 +648,14 @@ superclass from any of <em>its</em> superclasses.</p>
 <p>The rest of the behavior is the same. Popping the superclass leaves the instance
 at the top of the stack. When <code>bindMethod()</code> succeeds, it pops the instance and
 pushes the new bound method. Otherwise, it reports a runtime error and returns
-<code>false</code>. In that case, we abort the interpreter.</p>
-<aside name="field">
+<code>false</code>. In that case, we abort the interpreter.</p><aside name="field">
 <p>Another difference compared to <code>OP_GET_PROPERTY</code> is that we don&rsquo;t try to look
 for a shadowing field first. Fields are not inherited, so <code>super</code> expressions
 always resolve to methods.</p>
 <p>If Lox were a prototype-based language that used <em>delegation</em> instead of
 <em>inheritance</em>, then instead of one <em>class</em> inheriting from another <em>class</em>,
 instances would inherit from (&ldquo;delegate to&rdquo;) other instances. In that case,
-fields <em>could</em> be inherited, and we would need to check for them here.</p>
-</aside>
-<h3><a href="#faster-super-calls" id="faster-super-calls"><small>29&#8202;.&#8202;3&#8202;.&#8202;2</small>Faster super calls</a></h3>
+fields <em>could</em> be inherited, and we would need to check for them here.</p></aside><hnull><a href="#null" id=""></a></hnull>
 <p>We have superclass method accesses working now. And since the returned object is
 an ObjBoundMethod that you can then invoke, we&rsquo;ve got super <em>calls</em> working too.
 Just like last chapter, we&rsquo;ve reached a point where our VM has the complete,
@@ -717,11 +694,9 @@ find one, we compile that. Then we load the superclass. After that, we emit a
 new <code>OP_SUPER_INVOKE</code> instruction. This <span
 name="superinstruction">superinstruction</span> combines the behavior of
 <code>OP_GET_SUPER</code> and <code>OP_CALL</code>, so it takes two operands: the constant table index
-of the method name to look up and the number of arguments to pass to it.</p>
-<aside name="superinstruction">
+of the method name to look up and the number of arguments to pass to it.</p><aside name="superinstruction">
 <p>This is a particularly <em>super</em> superinstruction, if you get what I&rsquo;m saying.
-I<span class="ellipse">&thinsp;.&thinsp;.&thinsp;.&nbsp;</span>I&rsquo;m sorry for this terrible joke.</p>
-</aside>
+I<span class="ellipse">&thinsp;.&thinsp;.&thinsp;.&nbsp;</span>I&rsquo;m sorry for this terrible joke.</p></aside>
 <p>Otherwise, if we don&rsquo;t find a <code>(</code>, we continue to compile the expression as a
 super access like we did before and emit an <code>OP_GET_SUPER</code>.</p>
 <p>Drifting down the compilation pipeline, our first stop is a new instruction.</p>
@@ -786,8 +761,7 @@ given class and attempts to create a call to it with the given arity. If a
 method could not be found, it returns <code>false</code>, and we bail out of the
 interpreter. Otherwise, <code>invokeFromClass()</code> pushes a new CallFrame onto the call
 stack for the method&rsquo;s closure. That invalidates the interpreter&rsquo;s cached
-CallFrame pointer, so we refresh <code>frame</code>.</p>
-<h2><a href="#a-complete-virtual-machine" id="a-complete-virtual-machine"><small>29&#8202;.&#8202;4</small>A Complete Virtual Machine</a></h2>
+CallFrame pointer, so we refresh <code>frame</code>.</p><hnull><a href="#null" id=""></a></hnull>
 <p>Take a look back at what we&rsquo;ve created. By my count, we wrote around 2,500 lines
 of fairly clean, straightforward C. That little program contains a complete
 implementation of the<span class="em">&mdash;</span>quite high-level!<span class="em">&mdash;</span>Lox language, with a whole
@@ -810,9 +784,7 @@ complete and full featured. You built the car and can drive it wherever you want
 now. But if you are looking to have more fun tuning and tweaking for even
 greater performance out on the track, there is one more chapter. We don&rsquo;t add
 any new capabilities, but we roll in a couple of classic optimizations to
-squeeze even more perf out. If that sounds fun, <a href="optimization.html">keep reading</a><span class="ellipse">&thinsp;.&thinsp;.&thinsp;.&nbsp;</span></p>
-<div class="challenges">
-<h2><a href="#challenges" id="challenges">Challenges</a></h2>
+squeeze even more perf out. If that sounds fun, <a href="optimization.html">keep reading</a><span class="ellipse">&thinsp;.&thinsp;.&thinsp;.&nbsp;</span></p><div class="challenges"><hnull><a href="#null" id=""></a></hnull>
 <ol>
 <li>
 <p>A tenet of object-oriented programming is that a class should ensure new

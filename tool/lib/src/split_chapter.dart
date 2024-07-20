@@ -8,12 +8,13 @@ import 'package:tool/src/book.dart';
 import 'package:tool/src/code_tag.dart';
 import 'package:tool/src/page.dart';
 import 'package:tool/src/source_file_parser.dart';
+import 'package:glob/list_local_fs.dart';
 
 /// Don't do too many file operations at once or we risk running out of file
 /// descriptors.
 var _filePool = Pool(200);
 
-Future<void> splitChapter(Book book, Page chapter, [CodeTag tag]) async {
+Future<void> splitChapter(Book book, Page chapter, [CodeTag? tag]) async {
   var futures = <Future<void>>[];
 
   for (var file in Glob("${chapter.language}/**.{c,h,java}").listSync()) {
@@ -24,7 +25,7 @@ Future<void> splitChapter(Book book, Page chapter, [CodeTag tag]) async {
 }
 
 Future<void> _splitSourceFile(Book book, Page chapter, String sourcePath,
-    [CodeTag tag]) async {
+    [CodeTag? tag]) async {
   var relative = p.relative(sourcePath, from: chapter.language);
 
   // Don't split the generated files.
@@ -38,13 +39,13 @@ Future<void> _splitSourceFile(Book book, Page chapter, String sourcePath,
 
   // If we're generating the split for an entire chapter, include all its
   // snippets.
-  tag ??= book.lastSnippet(chapter).tag;
+  tag ??= book.lastSnippet(chapter)?.tag;
 
   var outputFile = File(p.join("gen", package, relative));
 
   var resource = await _filePool.request();
   try {
-    var output = _generateSourceFile(book, chapter, sourcePath, tag);
+    var output = _generateSourceFile(book, chapter, sourcePath, tag!);
     if (output.isNotEmpty) {
       // Don't overwrite the file if it didn't change, so the makefile doesn't
       // think it was touched.
