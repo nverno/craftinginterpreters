@@ -27,9 +27,9 @@ void clearLine() {
   }
 }
 
-void writeLine([String line]) {
+void writeLine([String line = '']) {
   clearLine();
-  if (line != null) stdout.write(line);
+  if (line.length > 0) stdout.write(line);
 }
 
 bool get _allowAnsi =>

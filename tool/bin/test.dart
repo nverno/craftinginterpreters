@@ -1,8 +1,12 @@
 import 'dart:convert';
+import 'dart:developer';
 import 'dart:io';
+import 'dart:convert';
 
 import 'package:args/args.dart';
 import 'package:glob/glob.dart';
+import 'package:glob/list_local_fs.dart';
+
 import 'package:path/path.dart' as p;
 
 import 'package:tool/src/term.dart' as term;
@@ -22,10 +26,10 @@ var _failed = 0;
 var _skipped = 0;
 var _expectations = 0;
 
-Suite _suite;
-String _filterPath;
-String _customInterpreter;
-List<String> _customArguments;
+Suite _suite = Suite('', '', '', [], Map<String, String>());
+String? _filterPath;
+String? _customInterpreter;
+List<String>? _customArguments;
 
 final _allSuites = <String, Suite>{};
 final _cSuites = <String>[];
@@ -39,6 +43,21 @@ class Suite {
   final Map<String, String> tests;
 
   Suite(this.name, this.language, this.executable, this.args, this.tests);
+
+  Map<String, dynamic> toJson() {
+    return {
+      'name': name,
+      'language': language,
+      'executable': executable,
+      'args': args,
+      'tests': tests,
+    };
+  }
+
+  @override
+  String toString() {
+    return jsonEncode(this.toJson());
+  }
 }
 
 void main(List<String> arguments) {
@@ -110,7 +129,8 @@ void _runSuites(List<String> names) {
 }
 
 bool _runSuite(String name) {
-  _suite = _allSuites[name];
+  _suite = _allSuites[name]!;
+  print(JsonEncoder.withIndent('  ').convert(_suite.toJson()));
 
   _passed = 0;
   _failed = 0;
@@ -140,11 +160,11 @@ void _runTest(String path) {
   // Make a nice short path relative to the working directory. Normalize it to
   // use "/" since the interpreters expect the argument to use that.
   path = p.posix.normalize(path);
-
+  
   // Check if we are just running a subset of the tests.
   if (_filterPath != null) {
     var thisTest = p.posix.relative(path, from: "test");
-    if (!thisTest.startsWith(_filterPath)) return;
+    if (!thisTest.startsWith(_filterPath!)) return;
   }
 
   // Update the status line.
@@ -191,7 +211,7 @@ class Test {
   final _expectedErrors = <String>{};
 
   /// The expected runtime error message or `null` if there should not be one.
-  String _expectedRuntimeError;
+  String? _expectedRuntimeError;
 
   /// If there is an expected runtime error, the line it should occur on.
   int _runtimeErrorLine = 0;
@@ -207,7 +227,7 @@ class Test {
     // Get the path components.
     var parts = _path.split("/");
     var subpath = "";
-    String state;
+    String? state = "";
 
     // Figure out the state of the test. We don't break out of this loop because
     // we want lines for more specific paths to override more general ones.
@@ -220,7 +240,9 @@ class Test {
       }
     }
 
-    if (state == null) {
+    if (state == null || state.length == 0) {
+      // print('\nCwd: ${Directory.current}, parts: $parts\n');
+      // stdout.flush();
       throw "Unknown test state for '$_path'.";
     } else if (state == "skip") {
       _skipped++;
@@ -237,7 +259,7 @@ class Test {
 
       match = _expectedOutputPattern.firstMatch(line);
       if (match != null) {
-        _expectedOutput.add(ExpectedOutput(lineNum, match[1]));
+        _expectedOutput.add(ExpectedOutput(lineNum, match[1]!));
         _expectations++;
         continue;
       }
@@ -273,7 +295,7 @@ class Test {
       match = _expectedRuntimeErrorPattern.firstMatch(line);
       if (match != null) {
         _runtimeErrorLine = lineNum;
-        _expectedRuntimeError = match[1];
+        _expectedRuntimeError = match[1]!;
         // If we expect a runtime error, it should exit with EX_SOFTWARE.
         _expectedExitCode = 70;
         _expectations++;
@@ -327,17 +349,17 @@ class Test {
     }
 
     // Make sure the stack trace has the right line.
-    RegExpMatch match;
+    RegExpMatch? match;
     var stackLines = errorLines.sublist(1);
     for (var line in stackLines) {
-      match = _stackTracePattern.firstMatch(line);
+      match = _stackTracePattern.firstMatch(line)!;
       if (match != null) break;
     }
 
     if (match == null) {
       fail("Expected stack trace and got:", stackLines);
     } else {
-      var stackLine = int.parse(match[1]);
+      var stackLine = int.parse(match[1]!);
       if (stackLine != _runtimeErrorLine) {
         fail("Expected runtime error on line $_runtimeErrorLine "
             "but was on line $stackLine.");
@@ -422,9 +444,9 @@ class Test {
     }
   }
 
-  void fail(String message, [List<String> lines]) {
+  void fail(String message, [List<String> lines = const []]) {
     _failures.add(message);
-    if (lines != null) _failures.addAll(lines);
+    if (lines.length > 0) _failures.addAll(lines);
   }
 }
 
